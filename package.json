@@ -23,6 +23,6 @@
     },
     "dependencies": {
         "smarthr-ui": "^65.2.1",
-        "styled-components": "^6.1.15"
+        "styled-components": "^5.0.1"
     }
 }
