@@ -1,4 +1,21 @@
 @import './google-cse.css';
+@import './font.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* メインカラー：スカイブルー（背景やボタンに使用） */
+  /* ヘッダーおよびフッターの背景色（統一感を出すために基本はスカイブルー） */
+  --color-primary: #00AEEF;
+  /* アクセントカラー：タンジェリンオレンジ（強調要素に使用） */
+  --color-accent: #FF8C00;
+  /* 背景色：ライトグレー（コンテンツ背景などに使用） */
+  --color-background: #EFEFEF;
+  /* テキストカラー：濃いグレー（本文テキスト用） */
+  --color-text: #333333;
+  /* ヘッダー・フッターの代替背景色（重厚感や差別化を出す場合） */
+  --color-header-footer-alt: #007AAE;
+  /* ホワイト（高コントラストのテキストやアイコン用） */
+  --color-white: #FFFFFF;
+}
