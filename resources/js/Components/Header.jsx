@@ -1,7 +1,18 @@
+import React from 'react';
 import {Link} from '@inertiajs/react';
 import * as Images from '../img';
+import {useForm} from '@inertiajs/react';
 
-const Header = (auth) => {
+const Header = ({authUser}) => {
+  // useForm() を使ってフォーム操作を簡単にする
+  const {post} = useForm();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    // POST リクエストを /logout ルートに送信する
+    post(route('logout'));
+  };
+
   return (
     <header className="w-screen bg-[var(--color-primary)] text-[var(--color-white)]">
       <nav className="flex justify-between p-4 pt-12 md:p-8 items-center">
@@ -11,33 +22,48 @@ const Header = (auth) => {
         >
           音報
         </Link>
-        <div className='underline'>
-          {auth.user ? (
-            <Link
-              href={route('dashboard')}
-              className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none fÏble:ring-white"
+        {authUser ? (
+          <div className='underline flex flex-col gap-x-6 relative md:flex-row-reverse'>
+            <button
+              onClick={handleLogout}
+              className="flex font-bold text-base/[1] items-center ml-auto"
             >
-              Dashboard
-            </Link>
-          ) : (
-            <div className="block md:flex md:gap-x-8">
+              <Images.LogoutIcon alt="" className='w-5 fill-[var(--color-white)]' />
+              ログアウト
+            </button>
+            <div className='flex gap-x-6 mt-1 md:mt-0'>
               <Link
-                href={route('register')} className="flex font-bold text-base/[1] items-center">
-                <Images.AccountIcon alt="" className='w-5 fill-[var(--color-white)]' />
-                新規登録
+                href='/' className="flex font-bold text-base/[1] items-center">
+                <Images.BookmarkIcon alt="" className='w-5 fill-[var(--color-white)]' />
+                お気に入り
               </Link>
               <Link
-                href={route('login')}
-                className="flex mt-1 md:mt-0 font-bold text-base/[1] items-center"
-                >
-                  <Images.LoginIcon alt="" className='w-5 fill-[var(--color-white)]' />
-                ログイン
+                href='/'
+                className="flex md:mt-0 font-bold text-base/[1] items-center"
+              >
+                <Images.AccountIcon alt="" className='w-5 fill-[var(--color-white)]' />
+                マイページ
               </Link>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className='underline flex flex-col md:flex-row md:gap-x-6'>
+            <Link
+              href={route('register')} className="flex font-bold text-base/[1] items-center">
+              <Images.RegistrationIcon alt="" className='w-5 fill-[var(--color-white)]' />
+              新規登録
+            </Link>
+            <Link
+              href={route('login')}
+              className="flex mt-1 md:mt-0 font-bold text-base/[1] items-center"
+            >
+              <Images.LoginIcon alt="" className='w-5 fill-[var(--color-white)]' />
+              ログイン
+            </Link>
+          </div>
+        )}
       </nav>
-    </header>
+    </header >
   );
 };
 export default Header;

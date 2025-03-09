@@ -1,13 +1,15 @@
+import React from 'react';
 import {Head} from '@inertiajs/react';
 import Header from '@/Components/Header';
 import GoogleCSE from '@/Components/SearchAPI';
 
-export default function Welcome (auth) {
+const Top = ({ authUser, canLogin, canRegister }) => {
+  const isLoggedIn = Boolean(authUser);
 
   return (
     <>
-      <Head title="Welcome" />
-      <Header />
+      <Head title="音報 | トップページ" />
+      <Header authUser={authUser}/>
       <main className="pt-8 px-4 md:px-8">
         <div className="">
           <p className="font-bold text-xl/[1.5]">音楽カテゴリ・楽器を入力して、<br className="sp" />イベントや演奏会情報を検索しよう!</p>
@@ -18,3 +20,5 @@ export default function Welcome (auth) {
     </>
   );
 }
+
+export default Top;
