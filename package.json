@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "clean": "rm -rf node_modules/.vite && rm -rf public/build"
+        "clean": "rm -rf public/build"
     },
     "devDependencies": {
         "@headlessui/react": "^2.0.0",
