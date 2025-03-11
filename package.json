@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "clean": "rm -rf node_modules/.vite && rm -rf public/build"
     },
     "devDependencies": {
         "@headlessui/react": "^2.0.0",
