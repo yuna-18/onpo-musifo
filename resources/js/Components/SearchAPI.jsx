@@ -2,34 +2,35 @@ import React, { useEffect } from 'react';
 
 const GoogleCSE = () => {
   useEffect(() => {
-    // 既に同じスクリプトが読み込まれていないかチェック
-    if (!document.querySelector('script[src="https://cse.google.com/cse.js?cx=349714df9516f4648"]')) {
+    const renderGoogleCSE = () => {
+      // 変更：ターゲットのコンテナIDを "google-cse-container" に変更
+      const container = document.getElementById("google-cse-container");
+      if (container && container.childElementCount === 0 &&
+          window.google && window.google.search && window.google.search.cse && window.google.search.cse.element) {
+        window.google.search.cse.element.render({
+          div: "google-cse-container", // ここも同様に変更
+          tag: 'searchresults-only'
+        });
+      } else if (!container || container.childElementCount === 0) {
+        // googleオブジェクトがまだ準備できていなければ再試行
+        setTimeout(renderGoogleCSE, 500);
+      }
+    };
+
+    if (!window.__gcse) {
+      // explicit モードに設定して、コールバックでレンダリング
+      window.__gcse = { parsetags: 'explicit', callback: renderGoogleCSE };
       const script = document.createElement('script');
       script.src = 'https://cse.google.com/cse.js?cx=349714df9516f4648';
       script.async = true;
-      script.onload = () => {
-        // スクリプト読み込み完了後、CSE をレンダリング
-        if (window.google && window.google.search) {
-          window.google.search.cse.element.render({
-            div: "google_search",
-            tag: 'search'
-          });
-        }
-      };
       document.body.appendChild(script);
     } else {
-      // スクリプトが既に読み込まれている場合は、すぐにレンダリングを試みる
-      if (window.google && window.google.search) {
-        window.google.search.cse.element.render({
-          div: "google_search",
-          tag: 'search'
-        });
-      }
+      renderGoogleCSE();
     }
-  }, []); // コンポーネントのマウント時のみ実行
+  }, []);
 
-  // CSE の結果が表示される div に id を付与
-  return <div id="google_search" className="gcse-searchresults-only"></div>;
+  // Inertia のコンテナとは別の場所に配置しているため、ここでは何もレンダリングしない
+  return null;
 };
 
 export default GoogleCSE;
