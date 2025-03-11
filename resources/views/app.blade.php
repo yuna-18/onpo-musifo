@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
   <!-- Fonts -->
@@ -20,6 +19,8 @@
 
 <body class="font-notosans antialiased">
   @inertia
+  <!-- Google CSE 用の独立したコンテナ -->
+  <div id="google-cse-container"></div>
 </body>
 
 </html>
