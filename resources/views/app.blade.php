@@ -23,4 +23,24 @@
   <div id="google-cse-container"></div>
 </body>
 
+<script>
+  function toggleGoogleCSEContainer() {
+    // 例: トップページのパスを "/top" としている場合
+    const container = document.getElementById("google-cse-container");
+    if (!container) return;
+    if (window.location.pathname === '/') {
+      container.style.display = "block";
+    } else {
+      container.style.display = "none";
+    }
+  }
+
+  // 初回ロード時
+  document.addEventListener("DOMContentLoaded", toggleGoogleCSEContainer);
+  // ブラウザの戻る・進むなどでのナビゲーション時
+  window.addEventListener("popstate", toggleGoogleCSEContainer);
+  // Inertia.js のページ遷移完了時に実行
+  document.addEventListener("inertia:finish", toggleGoogleCSEContainer);
+</script>
+
 </html>
