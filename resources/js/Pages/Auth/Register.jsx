@@ -5,11 +5,11 @@ import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import {Head, Link, useForm} from '@inertiajs/react';
 
-import {createTheme, ThemeProvider, Stack} from 'smarthr-ui';
-import {Input, Select, CheckBox} from 'smarthr-ui';
+import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
+import {Input, Select, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 import 'smarthr-ui/smarthr-ui.css';
 
-
+// todo MultiComboBoxはまだ未実装後で確認する
 export default function Register () {
   const theme = createTheme();
   const {data, setData, post, processing, errors, reset} = useForm({
@@ -28,16 +28,25 @@ export default function Register () {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme} >
       <Head title="音報 | ユーザー登録" />
-      <h2 className='font-bold text-3xl text-center pt-8'>ユーザー登録</h2>
+      <h2 className='font-bold text-3xl text-center pt-16'>ユーザー登録</h2>
 
-      <form onSubmit={submit} className='flex flex-col mt-12 mx-auto px-40'>
-        <Stack>
+      <form onSubmit={submit} className='md:w-[700px] lg:w-[956px] xl:w-[1212px] mt-16 mx-auto'>
+        <Stack className='pb-16'>
           {/* 氏名 */}
-          <div>
+          <FormControl
+            title="氏名"
+            helpMessage=""
+            exampleMessage=""
+            errorMessages={''}
+            supplementaryMessage=""
+            statusLabelProps={{
+              children: '必須',
+              type: 'red'
+            }}
+          >
             {/* <InputLabel htmlFor="name" value="Name" />
-
             <TextInput
               id="name"
               name="name"
@@ -48,286 +57,643 @@ export default function Register () {
               onChange={(e) => setData('name', e.target.value)}
               required
             /> */}
-
-            <label>
-              <p>氏名{''}</p>
-              <Input
-                id="name"
-                name="name"
-                value={data.name}
-                autoComplete="name"
-                autoFocus
-                type='text'
-                required
-                onChange={(e) => setData('name', e.target.value)}
-                className=''
-              />
-            </label>
-            {/* <InputError message={errors.name} className="mt-2" /> */}
-          </div>
+            <Input
+              id="name"
+              name="name"
+              value={data.name}
+              autoComplete="name"
+              autoFocus
+              type='text'
+              required
+              onChange={(e) => setData('name', e.target.value)}
+              className=''
+            />
+          </FormControl>
           {/* フリガナ */}
-          <div>
-            <label>
-              <p>フリガナ{''}</p>
-              <Input
-                id="furigana"
-                name="furigana"
-                value={data.furigana}
-                autoComplete="furigana"
-                autoFocus
-                type='text'
-                required
-                onChange={(e) => setData('furigana', e.target.value)}
+          <FormControl
+            title="フリガナ"
+            helpMessage="カタカナで入力してください。"
+            exampleMessage=""
+            errorMessages={''}
+            supplementaryMessage=""
+            statusLabelProps={{
+              children: '必須',
+              type: 'red'
+            }}
+          >
+            <Input
+              id="furigana"
+              name="furigana"
+              value={data.furigana}
+              autoComplete="furigana"
+              autoFocus
+              type='text'
+              required
+              onChange={(e) => setData('furigana', e.target.value)}
+              className=''
+            />
+          </FormControl>
+          {/* メールアドレス */}
+          <FormControl
+            title="メールアドレス"
+            helpMessage=""
+            exampleMessage=""
+            errorMessages={''}
+            supplementaryMessage=""
+            statusLabelProps={{
+              children: '必須',
+              type: 'red'
+            }}
+          >
+            <Input
+              id="email"
+              name="email"
+              value={data.email}
+              autoComplete="email"
+              autoFocus
+              type='text'
+              required
+              onChange={(e) => setData('email', e.target.value)}
+              className=''
+            />
+          </FormControl>
+          {/* パスワード */}
+          <FormControl
+            title="パスワード"
+            helpMessage="英数字それぞれ1文字以上・20文字以内で入力してください。"
+            exampleMessage=""
+            errorMessages={''}
+            supplementaryMessage=""
+            statusLabelProps={{
+              children: '必須',
+              type: 'red'
+            }}
+          >
+            <Input
+              id="password"
+              name="password"
+              value={data.password}
+              autoComplete="password"
+              autoFocus
+              type='text'
+              required
+              onChange={(e) => setData('password', e.target.value)}
+              className=''
+            />
+          </FormControl>
+          {/* 都道府県 MultiComboBox*/}
+          <FormControl
+            title="都道府県"
+            helpMessage="地域に合わせた情報をお届けしやすくするために必要です。(複数選択可)"
+            exampleMessage=""
+            errorMessages={''}
+            supplementaryMessage=""
+            // statusLabelProps={{
+            //   children: '必須',
+            //   type: 'red'
+            // }}
+          >
+            <MultiComboBox
+              items={[
+                {
+                  label: '北海道',
+                  value: '1'
+                },
+                {
+                  label: '青森',
+                  value: '2'
+                },
+                {
+                  label: '岩手',
+                  value: '3'
+                },
+                {
+                  label: '宮城',
+                  value: '4'
+                },
+                {
+                  label: '秋田',
+                  value: '5'
+                },
+                {
+                  label: '山形',
+                  value: '6'
+                },
+                {
+                  label: '福島',
+                  value: '7'
+                },
+                {
+                  label: '茨城',
+                  value: '8'
+                },
+                {
+                  label: '栃木',
+                  value: '9'
+                },
+                {
+                  label: '群馬',
+                  value: '10'
+                },
+                {
+                  label: '埼玉',
+                  value: '11'
+                },
+                {
+                  label: '千葉',
+                  value: '12'
+                },
+                {
+                  label: '東京',
+                  value: '13'
+                },
+                {
+                  label: '神奈川',
+                  value: '14'
+                },
+                {
+                  label: '新潟',
+                  value: '15'
+                },
+                {
+                  label: '富山',
+                  value: '16'
+                },
+                {
+                  label: '石川',
+                  value: '17'
+                },
+                {
+                  label: '福井',
+                  value: '18'
+                },
+                {
+                  label: '山梨',
+                  value: '19'
+                },
+                {
+                  label: '長野',
+                  value: '20'
+                },
+                {
+                  label: '岐阜',
+                  value: '21'
+                },
+                {
+                  label: '静岡',
+                  value: '22'
+                },
+                {
+                  label: '愛知',
+                  value: '23'
+                },
+                {
+                  label: '三重',
+                  value: '24'
+                },
+                {
+                  label: '滋賀',
+                  value: '25'
+                },
+                {
+                  label: '京都',
+                  value: '26'
+                },
+                {
+                  label: '大阪',
+                  value: '27'
+                },
+                {
+                  label: '兵庫',
+                  value: '28'
+                },
+                {
+                  label: '奈良',
+                  value: '29'
+                },
+                {
+                  label: '和歌山',
+                  value: '30'
+                },
+                {
+                  label: '鳥取',
+                  value: '31'
+                },
+                {
+                  label: '島根',
+                  value: '32'
+                },
+                {
+                  label: '岡山',
+                  value: '33'
+                },
+                {
+                  label: '広島',
+                  value: '34'
+                },
+                {
+                  label: '山口',
+                  value: '35'
+                },
+                {
+                  label: '徳島',
+                  value: '36'
+                },
+                {
+                  label: '香川',
+                  value: '37'
+                },
+                {
+                  label: '愛媛',
+                  value: '38'
+                },
+                {
+                  label: '高知',
+                  value: '39'
+                },
+                {
+                  label: '福岡',
+                  value: '40'
+                },
+                {
+                  label: '佐賀',
+                  value: '41'
+                },
+                {
+                  label: '長崎',
+                  value: '42'
+                },
+                {
+                  label: '熊本',
+                  value: '43'
+                },
+                {
+                  label: '大分',
+                  value: '44'
+                },
+                {
+                  label: '宮崎',
+                  value: '45'
+                },
+                {
+                  label: '鹿児島',
+                  value: '46'
+                },
+                {
+                  label: '沖縄',
+                  value: '47'
+                }
+              ]}
+              onDelete={() => {}}
+              onSelect={() => {}}
+              // 選択済みアイテムの例（中身は実際のデータに応じて変更）
+              selectedItems={[{}]}
+            />
+          </FormControl>
+          {/* 地域区分 ←Checkbox */}
+          {/* 好きな音楽ジャンル ←CheckBox */}
+          <Fieldset
+            errorMessages=""
+            exampleMessage=""
+            helpMessage="検索・メルマガ配信のために利用します。(複数選択可)"
+            supplementaryMessage=""
+            title="好きな音楽ジャンル"
+            statusLabelProps={{
+              children: '任意',
+              type: 'grey'
+            }}
+          >
+            <Cluster
+              gap={{
+                column: 1.25,
+                row: 0.5
+              }}>
+              <CheckBox
+                id="fav_chamber"
+                name="fav_chamber"
+                value={data.fav_chamber}
+                onChange={(e) => setData('fav_chamber', e.target.value)}
                 className=''
-              />
-            </label>
-            {/* <InputError message={errors.name} className="mt-2" /> */}
-          </div>
-          {/* 都道府県 */}
-          <div>
-            <label>
-              <p>都道府県{''}</p>
-              <Select
-                id="prefecture"
-                name="prefecture"
-                value={data.prefecture}
-                autoComplete="prefecture"
-                autoFocus
-                type='text'
-                required
-                hasBlank
-                onChange={(e) => setData('prefecture', e.target.value)}
-                className=''
+              >
+                アンサンブル・室内楽
+              </CheckBox>
 
-                options={[
+              <CheckBox
+                id="fav_orchestra"
+                name="fav_orchestra"
+                value={data.fav_orchestra}
+                onChange={(e) => setData('fav_orchestra', e.target.value)}
+                className=''
+              >
+                クラシック(オーケストラ大編成)
+              </CheckBox>
+
+              <CheckBox
+                id="fav_solo"
+                name="fav_solo"
+                value={data.fav_solo}
+                onChange={(e) => setData('fav_solo', e.target.value)}
+                className=''
+              >
+                クラシック・ソロ
+              </CheckBox>
+
+              <CheckBox
+                id="fav_jazz"
+                name="fav_jazz"
+                value={data.fav_jazz}
+                onChange={(e) => setData('fav_jazz', e.target.value)}
+                className=''
+              >
+                ジャズ・ビッグバンド
+              </CheckBox>
+
+              <CheckBox
+                id="fav_brass_band"
+                name="fav_brass_band"
+                value={data.fav_brass_band}
+                onChange={(e) => setData('fav_brass_band', e.target.value)}
+                className=''
+              >
+                吹奏楽・ブラスバンド
+              </CheckBox>
+
+              <CheckBox
+                id="fav_piano"
+                name="fav_piano"
+                value={data.fav_piano}
+                onChange={(e) => setData('fav_piano', e.target.value)}
+                className=''
+              >
+                ピアノ
+              </CheckBox>
+
+              <CheckBox
+                id="fav_japanese"
+                name="fav_japanese"
+                value={data.fav_japanese}
+                onChange={(e) => setData('fav_japanese', e.target.value)}
+                className=''
+              >
+                邦楽・和楽器
+              </CheckBox>
+
+              <CheckBox
+                id="fav_pops"
+                name="fav_pops"
+                value={data.fav_pops}
+                onChange={(e) => setData('fav_pops', e.target.value)}
+                className=''
+              >
+                ポピュラー・軽音楽
+              </CheckBox>
+              <CheckBox
+                id="fav_other"
+                name="fav_other"
+                value={data.pops}
+                onChange={(e) => setData('pops', e.target.value)}
+                className=''
+              >
+                その他
+              </CheckBox>
+
+            </Cluster>
+          </Fieldset>
+          {/* メールマガジン */}
+          <Fieldset
+            errorMessages=""
+            exampleMessage=""
+            helpMessage="地域に基づいた情報を配信します。"
+            supplementaryMessage=""
+            title="メールマガジン"
+            statusLabelProps={{
+              children: '任意',
+              type: 'grey'
+            }}
+          >
+            <CheckBox
+              id="japanese"
+              name="japanese"
+              value={data.japanese}
+              onChange={(e) => setData('japanese', e.target.value)}
+              className=''
+            >
+              受け取る
+            </CheckBox>
+          </Fieldset>
+          {/* メール通知機能 */}
+          <Fieldset
+            errorMessages=""
+            exampleMessage=""
+            helpMessage="お気に入りしたサイトの情報をメールで希望日時に通知する機能です。"
+            supplementaryMessage=""
+            title="メール通知機能"
+            statusLabelProps={{
+              children: '任意',
+              type: 'grey'
+            }}
+          >
+            <CheckBox
+              id="email_notify_opt_in"
+              name="email_notify_opt_in"
+              value={data.email_notify_opt_in}
+              onChange={(e) => setData('email_notify_opt_in', e.target.value)}
+              className=''
+            >
+              利用する
+            </CheckBox>
+          </Fieldset>
+          {/* 経験楽器(大分類) */}
+          <Fieldset
+            errorMessages=""
+            exampleMessage=""
+            helpMessage="音楽ジャンルを選択後、おおまかな楽器の分類を選択してください。(複数選択可)"
+            supplementaryMessage=""
+            title="経験楽器(大分類)"
+            statusLabelProps={{
+              children: '任意',
+              type: 'grey'
+            }}
+            className='block'
+          >
+            <Stack>
+              {/* 経験した音楽ジャンル */}
+              <Cluster
+                gap={{
+                  column: 1.25,
+                  row: 0.5
+                }}>
+                <CheckBox
+                  id="exp_chamber"
+                  name="exp_chamber"
+                  value={data.exp_chamber}
+                  onChange={(e) => setData('exp_chamber', e.target.value)}
+                  className=''
+                >
+                  アンサンブル・室内楽
+                </CheckBox>
+
+                <CheckBox
+                  id="exp_orchestra"
+                  name="exp_orchestra"
+                  value={data.exp_orchestra}
+                  onChange={(e) => setData('exp_orchestra', e.target.value)}
+                  className=''
+                >
+                  クラシック(オーケストラ大編成)
+                </CheckBox>
+
+                <CheckBox
+                  id="exp_solo"
+                  name="exp_solo"
+                  value={data.exp_solo}
+                  onChange={(e) => setData('exp_solo', e.target.value)}
+                  className=''
+                >
+                  クラシック・ソロ
+                </CheckBox>
+
+                <CheckBox
+                  id="exp_jazz"
+                  name="exp_jazz"
+                  value={data.exp_jazz}
+                  onChange={(e) => setData('exp_jazz', e.target.value)}
+                  className=''
+                >
+                  ジャズ・ビッグバンド
+                </CheckBox>
+
+                <CheckBox
+                  id="exp_brass_band"
+                  name="exp_brass_band"
+                  value={data.exp_brass_band}
+                  onChange={(e) => setData('exp_brass_band', e.target.value)}
+                  className=''
+                >
+                  吹奏楽・ブラスバンド
+                </CheckBox>
+
+                <CheckBox
+                  id="exp_piano"
+                  name="exp_piano"
+                  value={data.exp_piano}
+                  onChange={(e) => setData('exp_piano', e.target.value)}
+                  className=''
+                >
+                  ピアノ
+                </CheckBox>
+
+                <CheckBox
+                  id="exp_japanese"
+                  name="exp_japanese"
+                  value={data.exp_japanese}
+                  onChange={(e) => setData('exp_japanese', e.target.value)}
+                  className=''
+                >
+                  邦楽・和楽器
+                </CheckBox>
+
+                <CheckBox
+                  id="exp_pops"
+                  name="exp_pops"
+                  value={data.exp_pops}
+                  onChange={(e) => setData('exp_pops', e.target.value)}
+                  className=''
+                >
+                  ポピュラー・軽音楽
+                </CheckBox>
+                <CheckBox
+                  id="exp_other"
+                  name="exp_other"
+                  value={data.exp_other}
+                  onChange={(e) => setData('exp_other', e.target.value)}
+                  className=''
+                >
+                  その他
+                </CheckBox>
+              </Cluster>
+              <MultiComboBox
+                items={[
                   {
-                    label: '北海道',
-                    value: '1'
+                    label: 'option 1',
+                    value: 'value-1'
                   },
                   {
-                    label: '青森',
-                    value: '2'
-                  },
-                  {
-                    label: '岩手',
-                    value: '3'
-                  },
-                  {
-                    label: '宮城',
-                    value: '4'
-                  },
-                  {
-                    label: '秋田',
-                    value: '5'
-                  },
-                  {
-                    label: '山形',
-                    value: '6'
-                  },
-                  {
-                    label: '福島',
-                    value: '7'
-                  },
-                  {
-                    label: '茨城',
-                    value: '8'
-                  },
-                  {
-                    label: '栃木',
-                    value: '9'
-                  },
-                  {
-                    label: '群馬',
-                    value: '10'
-                  },
-                  {
-                    label: '埼玉',
-                    value: '11'
-                  },
-                  {
-                    label: '千葉',
-                    value: '12'
-                  },
-                  {
-                    label: '東京',
-                    value: '13'
-                  },
-                  {
-                    label: '神奈川',
-                    value: '14'
-                  },
-                  {
-                    label: '新潟',
-                    value: '15'
-                  },
-                  {
-                    label: '富山',
-                    value: '16'
-                  },
-                  {
-                    label: '石川',
-                    value: '17'
-                  },
-                  {
-                    label: '福井',
-                    value: '18'
-                  },
-                  {
-                    label: '山梨',
-                    value: '19'
-                  },
-                  {
-                    label: '長野',
-                    value: '20'
-                  },
-                  {
-                    label: '岐阜',
-                    value: '21'
-                  },
-                  {
-                    label: '静岡',
-                    value: '22'
-                  },
-                  {
-                    label: '愛知',
-                    value: '23'
-                  },
-                  {
-                    label: '三重',
-                    value: '24'
-                  },
-                  {
-                    label: '滋賀',
-                    value: '25'
-                  },
-                  {
-                    label: '京都',
-                    value: '26'
-                  },
-                  {
-                    label: '大阪',
-                    value: '27'
-                  },
-                  {
-                    label: '兵庫',
-                    value: '28'
-                  },
-                  {
-                    label: '奈良',
-                    value: '29'
-                  },
-                  {
-                    label: '和歌山',
-                    value: '30'
-                  },
-                  {
-                    label: '鳥取',
-                    value: '31'
-                  },
-                  {
-                    label: '島根',
-                    value: '32'
-                  },
-                  {
-                    label: '岡山',
-                    value: '33'
-                  },
-                  {
-                    label: '広島',
-                    value: '34'
-                  },
-                  {
-                    label: '山口',
-                    value: '35'
-                  },
-                  {
-                    label: '徳島',
-                    value: '36'
-                  },
-                  {
-                    label: '香川',
-                    value: '37'
-                  },
-                  {
-                    label: '愛媛',
-                    value: '38'
-                  },
-                  {
-                    label: '高知',
-                    value: '39'
-                  },
-                  {
-                    label: '福岡',
-                    value: '40'
-                  },
-                  {
-                    label: '佐賀',
-                    value: '41'
-                  },
-                  {
-                    label: '長崎',
-                    value: '42'
-                  },
-                  {
-                    label: '熊本',
-                    value: '43'
-                  },
-                  {
-                    label: '大分',
-                    value: '44'
-                  },
-                  {
-                    label: '宮崎',
-                    value: '45'
-                  },
-                  {
-                    label: '鹿児島',
-                    value: '46'
-                  },
-                  {
-                    label: '沖縄',
-                    value: '47'
+                    label: 'option 2',
+                    value: 'value-2'
                   }
                 ]}
-
+                onDelete={() => {}}
+                onSelect={() => {}}
+                selectedItems={[
+                  {}
+                ]}
               />
-            </label>
-            {/* <InputError message={errors.name} className="mt-2" /> */}
-          </div>
-          {/* 好きな音楽ジャンル */}
-          <div>
-            {/* <label> */}
-              <p>好きな音楽ジャンル{''}</p>
-              <CheckBox
-                id="wind_music"
-                name="wind_music"
-                value={data.wind_music}
-                autoComplete="wind_music"
-                autoFocus
-                type='text'
-                required
-                onChange={(e) => setData('wind_music', e.target.value)}
-                className=''
-              >
-              吹奏楽
-              </CheckBox>
-              <CheckBox
-                id="classic"
-                name="classic"
-                value={data.classic}
-                autoComplete="classic"
-                autoFocus
-                type='text'
-                required
-                onChange={(e) => setData('classic', e.target.value)}
-                className=''
-              >
-              クラシック
-              </CheckBox>
-            {/* </label> */}
-            {/* <InputError message={errors.name} className="mt-2" /> */}
-          </div>
+            </Stack>
+          </Fieldset>
+          {/* 経験楽器(小分類) */}
+          <Fieldset
+            errorMessages=""
+            exampleMessage=""
+            helpMessage="楽器の中でも細かな分類を選択してください。(複数選択可)"
+            supplementaryMessage=""
+            title="経験楽器(小分類)"
+            statusLabelProps={{
+              children: '任意',
+              type: 'grey'
+            }}
+            className='block'
+          >
+            <MultiComboBox
+              items={[
+                {
+                  label: 'option 1',
+                  value: 'value-1'
+                },
+                {
+                  label: 'option 2',
+                  value: 'value-2'
+                }
+              ]}
+              onDelete={() => {}}
+              onSelect={() => {}}
+              selectedItems={[
+                {}
+              ]}
+            />
+          </Fieldset>
         </Stack>
+        <div className='flex justify-center gap-x-10 pb-16'>
+          <AnchorButton
+            href="/"
+            prefix=""
+            size="default"
+            suffix=""
+            variant="secondary"
+          >
+            トップへ戻る
+          </AnchorButton>
+          <AnchorButton
+            href="/"
+            prefix=""
+            size="default"
+            suffix=""
+            variant="primary"
+            className='shr-px-3'
+          >
+            確認する...
+          </AnchorButton>
+          {/* <Button
+            prefix=""
+            size="default"
+            suffix=""
+            type='submit'
+            variant="primary"
+            className='shr-px-3'
+          >
+            確認
+          </Button> */}
+        </div>
       </form>
     </ThemeProvider>
   );
