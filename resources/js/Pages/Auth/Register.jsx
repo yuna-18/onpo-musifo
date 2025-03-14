@@ -30,9 +30,9 @@ export default function Register () {
   return (
     <ThemeProvider theme={theme} >
       <Head title="音報 | ユーザー登録" />
-      <h2 className='font-bold text-3xl text-center pt-16'>ユーザー登録</h2>
+      <h2 className='font-bold text-3xl text-center pt-8 md:pt-16'>ユーザー登録</h2>
 
-      <form onSubmit={submit} className='md:w-[700px] lg:w-[956px] xl:w-[1212px] mt-16 mx-auto'>
+      <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 md:mt-16 mx-auto'>
         <Stack className='pb-16'>
           {/* 氏名 */}
           <FormControl
@@ -663,15 +663,16 @@ export default function Register () {
             />
           </Fieldset>
         </Stack>
-        <div className='flex justify-center gap-x-10 pb-16'>
+        <div className='flex flex-col mx-auto md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
           <AnchorButton
             href="/"
             prefix=""
             size="default"
             suffix=""
             variant="secondary"
+            wide
           >
-            トップへ戻る
+            戻る
           </AnchorButton>
           <AnchorButton
             href="/"
@@ -679,9 +680,10 @@ export default function Register () {
             size="default"
             suffix=""
             variant="primary"
-            className='shr-px-3'
+            className=''
+            wide
           >
-            確認する...
+            確認
           </AnchorButton>
           {/* <Button
             prefix=""
@@ -690,6 +692,7 @@ export default function Register () {
             type='submit'
             variant="primary"
             className='shr-px-3'
+            wide
           >
             確認
           </Button> */}
