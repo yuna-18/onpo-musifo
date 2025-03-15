@@ -13,15 +13,17 @@ Route::get('/', function () {
   ]);
 })->name('top');
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
   Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
   Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
   Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/favorite', function () {
+  return Inertia::render('Favorite', [
+    'authUser' => optional(Auth::user())->toArray(), // null の場合は null を返す
+  ]);
+})->name('favorite');
 
 Route::get('/smarthr-test', function () {
   return Inertia::render('SmarthrTest');

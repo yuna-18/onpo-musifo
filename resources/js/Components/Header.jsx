@@ -33,7 +33,7 @@ const Header = ({authUser}) => {
             </button>
             <div className='flex gap-x-6 mt-1 md:mt-0'>
               <Link
-                href='/' className="flex font-bold text-base/[1] items-center">
+                href={route('favorite')} className="flex font-bold text-base/[1] items-center">
                 <Images.BookmarkIcon alt="" className='w-5 fill-[var(--color-white)]' />
                 お気に入り
               </Link>
