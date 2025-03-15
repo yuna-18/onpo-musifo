@@ -111,7 +111,7 @@ export default function Register () {
               value={data.email}
               autoComplete="email"
               autoFocus
-              type='text'
+              type='email'
               required
               onChange={(e) => setData('email', e.target.value)}
               className=''
@@ -135,7 +135,7 @@ export default function Register () {
               value={data.password}
               autoComplete="password"
               autoFocus
-              type='text'
+              type='password'
               required
               onChange={(e) => setData('password', e.target.value)}
               className=''
@@ -691,7 +691,7 @@ export default function Register () {
             suffix=""
             type='submit'
             variant="primary"
-            className='shr-px-3'
+            className=''
             wide
           >
             確認
