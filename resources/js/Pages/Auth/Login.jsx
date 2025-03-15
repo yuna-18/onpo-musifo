@@ -38,7 +38,7 @@ export default function Login ({status, canResetPassword}) {
 
 
 
-        <form onSubmit={submit} className='w-[368px] mt-8 mx-auto'>
+        <form onSubmit={submit} className='w-[320px] md:w-[368px] mt-8 mx-auto'>
           {/* <div>
           <InputLabel htmlFor="email" value="Email" />
 
