@@ -7,15 +7,23 @@
 :root {
   /* メインカラー：スカイブルー（背景やボタンに使用） */
   /* ヘッダーおよびフッターの背景色（統一感を出すために基本はスカイブルー） */
-  --color-primary: #00AEEF;
-  /* アクセントカラー：タンジェリンオレンジ（強調要素に使用） */
-  --color-accent: #FF8C00;
+  --color-main: #4FC3F7;
+  --color-main-darken: #42B4E7;
+  /* テキストボタンのホバー */
+  --color-main-lighten: #D6EEF3;
+  /* アクセントカラー：タンジェリンオレンジ（強調要素に使用）ポジティブな操作　金魚カラー */
+  --color-accent: #FF7F50;
+  --color-accent-darken: #FFF1E6;
+  /* 警告カラー */
+  --color-warning: #B35C00;
+  /* テキストボタンのホバー */
+  --color-warning-darken: #FFF3E6;
   /* 背景色：ライトグレー（コンテンツ背景などに使用） */
-  --color-background: #EFEFEF;
+  --color-background: #FAFAF5;
   /* テキストカラー：濃いグレー（本文テキスト用） */
-  --color-text: #333333;
+  --color-text: #4A4A4A;
   /* ヘッダー・フッターの代替背景色（重厚感や差別化を出す場合） */
-  --color-header-footer-alt: #007AAE;
+  /* --color-header-footer-alt: #007AAE; */
   /* ホワイト（高コントラストのテキストやアイコン用） */
   --color-white: #FFFFFF;
 }

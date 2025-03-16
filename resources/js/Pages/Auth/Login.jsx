@@ -26,9 +26,9 @@ export default function Login ({status, canResetPassword}) {
 
   return (
     <>
-      <Head title="音報 | ログイン" />
-      <Center verticalCentering className='min-h-screen'>
-        <h2 className='font-bold text-3xl text-center'>音報</h2>
+      <Head title="音すくい | ログイン" />
+      <Center verticalCentering className='min-h-screen text-[var(--color-text)] bg-[var(--color-background)]'>
+        <h2 className='font-bold text-3xl text-center'>音すくい</h2>
         <h3 className='font-bold text-2xl text-center mt-8'>ログイン</h3>
         {status && (
           <div className="mb-4 text-sm font-medium text-green-600">
@@ -122,6 +122,7 @@ export default function Login ({status, canResetPassword}) {
               suffix=""
               variant="secondary"
               wide
+              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text)] hover:bg-[var(--color-main-lighten)] hover:text-[var(--color-main)] hover:border-[var(--color-main)]'
             >
               キャンセル
             </AnchorButton>
@@ -131,9 +132,9 @@ export default function Login ({status, canResetPassword}) {
               suffix=""
               type='submit'
               variant="primary"
-              className=''
               wide
               disabled={processing}
+              className='h-[44px] bg-[var(--color-main)] border-[var(--color-main)] text-[var(--color-white)] hover:bg-[var(--color-main-darken)] hover:border-[var(--color-main-darken)]'
             >
               ログイン
             </Button>
@@ -143,7 +144,7 @@ export default function Login ({status, canResetPassword}) {
             {canResetPassword && (
               <Link
                 href={route('password.request')}
-                className="text-base font-bold underline"
+                className="text-base font-bold underline text-[var(--color-main)] hover:bg-[var(--color-main-lighten)]"
               >
                 パスワードの再設定
               </Link>

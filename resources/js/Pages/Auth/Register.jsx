@@ -7,7 +7,6 @@ import {Head, Link, useForm} from '@inertiajs/react';
 
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
 import {Input, Select, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
-import 'smarthr-ui/smarthr-ui.css';
 
 // todo MultiComboBoxはまだ未実装後で確認する
 export default function Register () {
@@ -28,9 +27,9 @@ export default function Register () {
   };
 
   return (
-    <ThemeProvider theme={theme} >
-      <Head title="音報 | ユーザー登録" />
-      <main>
+    <ThemeProvider theme={theme}>
+      <Head title="音すくい | 新規登録" />
+      <main className='text-[var(--color-text)]  bg-[var(--color-background)]'>
         <h2 className='font-bold text-3xl text-center pt-8 md:pt-16'>ユーザー登録</h2>
 
         <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 md:mt-16 mx-auto'>
@@ -672,6 +671,7 @@ export default function Register () {
               suffix=""
               variant="secondary"
               wide
+              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text)] hover:bg-[var(--color-main-lighten)] hover:text-[var(--color-main)] hover:border-[var(--color-main)]'
             >
               戻る
             </AnchorButton>
@@ -681,8 +681,9 @@ export default function Register () {
               size="default"
               suffix=""
               variant="primary"
-              className=''
               wide
+              disabled={processing}
+              className='h-[44px] bg-[var(--color-main)] border-[var(--color-main)] text-[var(--color-white)] hover:bg-[var(--color-main-darken)] hover:border-[var(--color-main-darken)]'
             >
               確認
             </AnchorButton>
