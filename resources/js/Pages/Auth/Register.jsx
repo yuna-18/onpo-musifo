@@ -29,11 +29,12 @@ export default function Register () {
   return (
     <ThemeProvider theme={theme}>
       <Head title="音すくい | 新規登録" />
-      <main className='text-[var(--color-text)]  bg-[var(--color-background)]'>
+      <main className='text-[var(--color-text-primary)]  bg-[var(--color-background)]'>
         <h2 className='font-bold text-3xl text-center pt-8 md:pt-16'>ユーザー登録</h2>
 
         <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 md:mt-16 mx-auto'>
           <Stack className='pb-16'>
+            {/* todo 入力フォーム・フォントのサイズ・間隔設定 */}
             {/* 氏名 */}
             <FormControl
               title="氏名"
@@ -671,10 +672,11 @@ export default function Register () {
               suffix=""
               variant="secondary"
               wide
-              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text)] hover:bg-[var(--color-main-lighten)] hover:text-[var(--color-main)] hover:border-[var(--color-main)]'
+              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
             >
               戻る
             </AnchorButton>
+            {/* todo 後で確認画面遷移ボタン実装 */}
             <AnchorButton
               href="/"
               prefix=""
@@ -683,7 +685,7 @@ export default function Register () {
               variant="primary"
               wide
               disabled={processing}
-              className='h-[44px] bg-[var(--color-main)] border-[var(--color-main)] text-[var(--color-white)] hover:bg-[var(--color-main-darken)] hover:border-[var(--color-main-darken)]'
+              className='h-[44px] bg-[var(--color-primary)] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
             >
               確認
             </AnchorButton>

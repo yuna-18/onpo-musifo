@@ -39,6 +39,7 @@ export default function Login ({status, canResetPassword}) {
 
 
         <form onSubmit={submit} className='w-[320px] md:w-[368px] mt-8 mx-auto'>
+          {/* todo フォームの大きさ・フォントサイズ設定 */}
           {/* <div>
           <InputLabel htmlFor="email" value="Email" />
 
@@ -122,7 +123,7 @@ export default function Login ({status, canResetPassword}) {
               suffix=""
               variant="secondary"
               wide
-              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text)] hover:bg-[var(--color-main-lighten)] hover:text-[var(--color-main)] hover:border-[var(--color-main)]'
+              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
             >
               キャンセル
             </AnchorButton>
@@ -134,7 +135,7 @@ export default function Login ({status, canResetPassword}) {
               variant="primary"
               wide
               disabled={processing}
-              className='h-[44px] bg-[var(--color-main)] border-[var(--color-main)] text-[var(--color-white)] hover:bg-[var(--color-main-darken)] hover:border-[var(--color-main-darken)]'
+              className='h-[44px] bg-[var(--color-primary)] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
             >
               ログイン
             </Button>
@@ -144,7 +145,7 @@ export default function Login ({status, canResetPassword}) {
             {canResetPassword && (
               <Link
                 href={route('password.request')}
-                className="text-base font-bold underline text-[var(--color-main)] hover:bg-[var(--color-main-lighten)]"
+                className="text-base font-bold underline text-[var(--color-primary)] hover:bg-[var(--color-primary-bg-hover)]"
               >
                 パスワードの再設定
               </Link>

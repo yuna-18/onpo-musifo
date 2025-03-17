@@ -5,25 +5,24 @@
 @tailwind utilities;
 
 :root {
-  /* メインカラー：スカイブルー（背景やボタンに使用） */
-  /* ヘッダーおよびフッターの背景色（統一感を出すために基本はスカイブルー） */
-  --color-main: #4FC3F7;
-  --color-main-darken: #42B4E7;
-  /* テキストボタンのホバー */
-  --color-main-lighten: #D6EEF3;
-  /* アクセントカラー：タンジェリンオレンジ（強調要素に使用）ポジティブな操作　金魚カラー */
+  --color-primary: #4FC3F7;
+  --color-primary-hover: #42B4E7;
+  --color-primary-active: #3A9FCC;
+  --color-primary-bg-hover: #D6EEF3;
+  --color-primary-bg-active: #B2DCE6;
+
   --color-accent: #FF7F50;
-  --color-accent-darken: #FFF1E6;
-  /* 警告カラー */
+  --color-accent-bg-hover: #FFF1E6;
+  --color-accent-bg-active: #FFE0B2;
+
   --color-warning: #B35C00;
-  /* テキストボタンのホバー */
-  --color-warning-darken: #FFF3E6;
-  /* 背景色：ライトグレー（コンテンツ背景などに使用） */
+  --color-warning-bg-hover: #FFF3E6;
+  --color-warning-bg-active: #FFDDCC;
+
   --color-background: #FAFAF5;
-  /* テキストカラー：濃いグレー（本文テキスト用） */
-  --color-text: #4A4A4A;
-  /* ヘッダー・フッターの代替背景色（重厚感や差別化を出す場合） */
-  /* --color-header-footer-alt: #007AAE; */
-  /* ホワイト（高コントラストのテキストやアイコン用） */
   --color-white: #FFFFFF;
+  --color-text-primary: #4A4A4A;
+
+  --color-disabled: #CCCCCC;
+  --color-disabled-bg: #F5F5F5;
 }
