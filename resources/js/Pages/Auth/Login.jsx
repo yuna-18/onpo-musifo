@@ -123,7 +123,7 @@ export default function Login ({status, canResetPassword}) {
               suffix=""
               variant="secondary"
               wide
-              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
+              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text)] font-bold text-base/[1] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
             >
               キャンセル
             </AnchorButton>
@@ -135,7 +135,7 @@ export default function Login ({status, canResetPassword}) {
               variant="primary"
               wide
               disabled={processing}
-              className='h-[44px] bg-[var(--color-primary)] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
+              className='h-[44px] bg-[var(--color-primary)] border-[var(--color-primary)] text-[var(--color-white)] font-bold text-base/[1] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
             >
               ログイン
             </Button>

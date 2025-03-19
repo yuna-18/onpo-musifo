@@ -672,7 +672,7 @@ export default function Register () {
               suffix=""
               variant="secondary"
               wide
-              className='h-[44px] bg-[var(--color-white)] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
+              className='h-[44px] bg-[var(--color-white)] font-bold text-base/[1] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
             >
               戻る
             </AnchorButton>
@@ -685,7 +685,7 @@ export default function Register () {
               variant="primary"
               wide
               disabled={processing}
-              className='h-[44px] bg-[var(--color-primary)] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
+              className='h-[44px] bg-[var(--color-primary)] font-bold text-base/[1] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
             >
               確認
             </AnchorButton>

@@ -2,7 +2,7 @@ import * as React from "react";
 const SvgAccountIcon = (props) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
-        fill="#1f1f1f"
+        fill="currentColor"
         viewBox="0 -960 960 960"
         {...props}
     >
