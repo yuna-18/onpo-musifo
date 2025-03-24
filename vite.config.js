@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ command, mode }) => {
   if (command === 'build') {
     return {
-      base: '/onpo-musifo/build/',  // 本番環境のサブディレクトリ
+      base: '/otosukui/build/',  // 本番環境のサブディレクトリ
       plugins: [
         laravel({
           input: 'resources/js/app.jsx',
