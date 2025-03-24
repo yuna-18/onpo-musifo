@@ -28,9 +28,12 @@ jobs:
           USER: ${{ secrets.USER }}
           APP_DIR: ${{ secrets.APP_DIR }}
         run: |
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} "bash -l -c '
-            cd ${APP_DIR} && \
-            git pull origin main && \
-            if [ ! -f composer.phar ]; then curl -sS https://getcomposer.org/installer | php; fi && \
-            php composer.phar install --no-dev && \
-            php artisan migrate --force'"
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} bash -l << 'EOF'
+            cd ${APP_DIR}
+            git pull origin main
+            if [ ! -f composer.phar ]; then
+              curl -sS https://getcomposer.org/installer | php
+            fi
+            php composer.phar install --no-dev
+            php artisan migrate --force
+          EOF
