@@ -1,0 +1,70 @@
+id,name,name_abbr,en_name,en_name_abbr,music_inst_category_id,sort_order
+1,ソプラノサクソフォン,ソプラノサックス,Soprano Saxophone,S.Sax,1,1
+2,アルトサクソフォン,アルトサックス,Alto Saxophone,A.Sax,1,2
+3,テナーサクソフォン,テナーサックス,Tenor Saxophone,T.Sax,1,3
+4,バリトンサクソフォン,バリサク,Baritone Saxophone,B.Sax,1,4
+5,クラリネット,クラ,Clarinet,Cl.,2,1
+6,バスクラリネット,バスクラ,Bass Clarinet,B.Cl.,2,2
+7,E♭クラリネット,エスクラ,E♭ Clarinet,E♭ Cl.,2,3
+8,アルトクラリネット,アルトクラ,Alto Clarinet,A.Cl.,2,4
+9,コントラバスクラリネット,コントラバスクラ,Contrabass Clarinet,C.B.Cl.,2,5
+10,オーボエ,,Oboe,Ob.,3,1
+11,イングリッシュホルン,コーラングレ,English Horn,E.Hn.,3,2
+12,ファゴット,,Bassoon,Bsn.,3,3
+13,コントラファゴット,,Contrabassoon,C.Bsn.,3,4
+14,フルート,,Flute,Fl.,4,1
+15,ピッコロ,,Piccolo,Picc.,4,2
+16,リコーダー,,Recorder,,4,3
+17,篠笛,,Shinobue,,4,4
+18,龍笛,,Ryūteki,,4,5
+67,ハーモニカ,,Harmonica,,4,6
+68,オカリナ,,Ocarina,,4,7
+69,バグパイプ,,Bagpipes,,4,8
+19,トランペット,ペット,Trumpet,Tp.,5,1
+20,コルネット,,Cornet,Cor.,5,2
+21,フリューゲルホルン,フリューゲル,Flugelhorn,Fl.Hn.,5,3
+22,ホルン,,French Horn,Hn.,5,4
+23,アルトホルン,,Alto Horn,A.Hn.,5,5
+24,トロンボーン,ボーン,Trombone,Tb.,5,6
+25,バストロンボーン,バスボーン,Bass Trombone,B.Tb.,5,7
+26,ユーフォニアム,ユーフォ,Euphonium,Euph.,5,8
+27,バリトンホルン,バリトン,Baritone Horn,Bar.Hn.,5,9
+28,チューバ,,Tuba,Tba.,5,10
+29,バイオリン,,Violin,Vn,6,1
+30,ビオラ,,Viola,Va,6,2
+31,チェロ,,Cello,Vc,6,3
+32,コントラバス,コンバス,Double Bass,Cb.,6,4
+33,クラシックギター,クラギ,Classical Guitar,Gtr.,7,1
+34,マンドリン,,Mandolin,,7,2
+35,バンジョー,,Banjo,,7,3
+36,ウクレレ,,Ukulele,,7,4
+37,箏,,Koto,,7,5
+38,三味線,三味,Shamisen,,7,6
+39,シタール,,Sitar,,7,7
+40,二胡,,Erhu,,7,8
+41,ティンパニ,,Timpani,Timp.,8,1
+42,スネアドラム,スネア,Snare Drum,S.Dr.,8,2
+43,バスドラム,バスドラ,Bass Drum,B.Dr.,8,3
+44,シンバル,,Cymbals,Cym.,8,4
+45,トライアングル,,Triangle,Tri.,8,5
+46,タンバリン,,Tambourine,Tamb.,8,6
+47,シロフォン,木琴,Xylophone,Xyl.,8,7
+48,グロッケンシュピール,グロッケン,Glockenspiel,Glock.,8,8
+49,ヴィブラフォン,ビブラ,Vibraphone,Vib.,8,9
+50,マリンバ,,Marimba,Mar.,8,10
+51,チャイム,,Chimes,Chm.,8,11
+52,スティールパン,,Steelpan,,8,12
+53,和太鼓,,Taiko (Japanese drum),,8,13
+54,ピアノ,,Piano,Pf.,9,1
+55,チェンバロ,,Harpsichord,Hpd.,9,2
+56,チェレスタ,,Celesta,Cel.,9,3
+57,パイプオルガン,オルガン,Pipe Organ,Org.,9,4
+58,アコーディオン,,Accordion,Acc.,9,5
+59,エレクトリックギター,エレキ,Electric Guitar,E.Gtr.,10,1
+60,アコースティックギター,アコギ,Acoustic Guitar,A.Gtr.,10,2
+61,エレクトリックベース,ベース,Electric Bass,E.Bass,10,3
+62,ドラムセット,ドラム,Drum Set,Dr.,8,14
+63,キーボード,,Keyboard,Kbd.,10,4
+64,シンセサイザー,シンセ,Synthesizer,Synth.,10,5
+65,テルミン,,Theremin,,10,6
+66,オンド・マルトノ,,Ondes Martenot,,10,7
