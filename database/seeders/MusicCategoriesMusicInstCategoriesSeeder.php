@@ -74,6 +74,6 @@ class MusicCategoriesMusicInstCategoriesSeeder extends Seeder
             ['music_category_id' => 9, 'music_inst_category_id' => 10, 'created_at' => $now, 'updated_at' => $now],
         ];
 
-        DB::table('music_categories_music_insts')->insert($data);
+        DB::table('music_categories_music_inst_categories')->insert($data);
     }
 }
