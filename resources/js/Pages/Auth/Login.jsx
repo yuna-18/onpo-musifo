@@ -117,7 +117,7 @@ export default function Login ({status, canResetPassword}) {
           {/* ボタンエリア */}
           <div className='flex flex-col mx-auto md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-10 mt-16'>
             <AnchorButton
-              href="/"
+              href="../"
               prefix=""
               size="default"
               suffix=""

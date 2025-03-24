@@ -28,7 +28,7 @@
     // 例: トップページのパスを "/top" としている場合
     const container = document.getElementById("google-cse-container");
     if (!container) return;
-    if (window.location.pathname === '/') {
+    if (window.location.pathname === '/' || window.location.pathname === '/onpo-musifo') {
       container.style.display = "block";
     } else {
       container.style.display = "none";

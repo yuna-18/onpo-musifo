@@ -17,7 +17,7 @@ const Header = ({authUser}) => {
     <header className="fixed w-[100vw] z-100 bg-[var(--color-primary)] text-[var(--color-white)]">
       <nav className="flex justify-between p-4 pt-12 md:p-8 items-center">
         <Link
-          href="/"
+          href="/onpo-musifo"
           className="font-bold text-2xl/[1.5] hover:opacity-90"
         >
           音報

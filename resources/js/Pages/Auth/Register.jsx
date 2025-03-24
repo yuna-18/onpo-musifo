@@ -666,7 +666,7 @@ export default function Register () {
           </Stack>
           <div className='flex flex-col mx-auto md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
             <AnchorButton
-              href="/"
+              href="../"
               prefix=""
               size="default"
               suffix=""
@@ -678,7 +678,7 @@ export default function Register () {
             </AnchorButton>
             {/* todo 後で確認画面遷移ボタン実装 */}
             <AnchorButton
-              href="/"
+              href="../"
               prefix=""
               size="default"
               suffix=""
