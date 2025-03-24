@@ -10,31 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      
-    - name: Set up SSH key
-      env:
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      run: |
-        echo "$PRIVATE_KEY" | base64 --decode > private_key
-        chmod 600 private_key
-        eval $(ssh-agent -s)
-        ssh-add private_key
+      - name: Set up SSH key
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" | base64 --decode > private_key
+          chmod 600 private_key
+          eval "$(ssh-agent -s)"
+          ssh-add private_key
 
-    - name: Deploy to Server
-      env:
-        HOST: ${{ secrets.HOST }}
-        USER: ${{ secrets.USER }}
-        APP_DIR: ${{ secrets.APP_DIR }}
-      run: |
-        ssh -v -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} << 'EOF'
-          cd ${APP_DIR}
-          git pull origin main
-          if [ ! -f composer.phar ]; then
-            curl -sS https://getcomposer.org/installer | php
-          fi
-          php composer.phar install --no-dev
-          php artisan migrate --force
-        EOF
+      - name: Deploy to Server
+        env:
+          HOST: ${{ secrets.HOST }}
+          USER: ${{ secrets.USER }}
+          APP_DIR: ${{ secrets.APP_DIR }}
+        run: |
+          ssh -v -o StrictHostKeyChecking=no -i private_key ${USER}@${HOST} << EOF
+            cd ${APP_DIR}
+            git pull origin main
+            if [ ! -f composer.phar ]; then
+              curl -sS https://getcomposer.org/installer | php
+            fi
+            php composer.phar install --no-dev
+            php artisan migrate --force
+          EOF
