@@ -17,10 +17,10 @@ const Header = ({authUser}) => {
     <header className="fixed w-[100vw] z-100 bg-[var(--color-primary)] text-[var(--color-white)]">
       <nav className="flex justify-between p-4 pt-12 md:p-8 items-center">
         <Link
-          href="/onpo-musifo"
+          href="/otosukui"
           className="font-bold text-2xl/[1.5] hover:opacity-90"
         >
-          音報
+          音すくい
         </Link>
         {authUser ? (
           <div className='underline flex flex-col gap-x-6 relative md:flex-row-reverse'>

@@ -25,6 +25,9 @@ export default function Register () {
       onFinish: () => reset('password', 'password_confirmation'),
     });
   };
+  
+  const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -666,7 +669,7 @@ export default function Register () {
           </Stack>
           <div className='flex flex-col mx-auto md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
             <AnchorButton
-              href="../"
+              href={topPagePath}
               prefix=""
               size="default"
               suffix=""
@@ -674,7 +677,7 @@ export default function Register () {
               wide
               className='h-[44px] bg-[var(--color-white)] font-bold text-base/[1] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
             >
-              戻る
+              キャンセル
             </AnchorButton>
             {/* todo 後で確認画面遷移ボタン実装 */}
             <AnchorButton
