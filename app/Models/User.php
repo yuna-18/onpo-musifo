@@ -46,11 +46,34 @@ class User extends Authenticatable
     ];
   }
 
-  // ⭐️ここから↓追加⭐️
   // 一番下に以下のメソッドを追加する。
   public function bookmarks()
   {
     // $thisは、Userモデルそのものと思ってください。
     return $this->hasMany(Bookmark::class);
+  }
+
+  // 音楽系
+  public function musicCategories()
+  {
+    return $this->belongsToMany(MusicCategory::class, 'users_music_categories');
+  }
+  public function musicInstCategories()
+  {
+    return $this->belongsToMany(MusicInstCategory::class, 'users_music_inst_categories');
+  }
+  public function musicInsts()
+  {
+    return $this->belongsToMany(MusicInst::class, 'users_music_insts');
+  }
+  
+  // 地域系
+  public function areas()
+  {
+    return $this->belongsToMany(Area::class, 'users_areas');
+  }
+  public function subareas()
+  {
+    return $this->belongsToMany(Subarea::class, 'users_subareas');
   }
 }
