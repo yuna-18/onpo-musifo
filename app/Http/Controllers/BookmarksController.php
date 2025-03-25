@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bookmarks;
+use App\Models\Bookmark;
 use Illuminate\Http\Request;
 
 class BookmarksController extends Controller
@@ -34,7 +34,7 @@ class BookmarksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Bookmarks $bookmarks)
+    public function show(Bookmark$bookmarks)
     {
         //
     }
@@ -42,7 +42,7 @@ class BookmarksController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Bookmarks $bookmarks)
+    public function edit(Bookmark$bookmarks)
     {
         //
     }
@@ -50,7 +50,7 @@ class BookmarksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Bookmarks $bookmarks)
+    public function update(Request $request, Bookmark$bookmarks)
     {
         //
     }
@@ -58,7 +58,7 @@ class BookmarksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Bookmarks $bookmarks)
+    public function destroy(Bookmark$bookmarks)
     {
         //
     }

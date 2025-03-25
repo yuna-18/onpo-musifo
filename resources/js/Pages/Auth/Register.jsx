@@ -1,15 +1,10 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
 import {Head, Link, useForm} from '@inertiajs/react';
-
+import Header from '@/Components/Header';
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
 import {Input, Select, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
 // todo MultiComboBoxはまだ未実装後で確認する
-export default function Register () {
+export default function Register ({authUser}) {
   const theme = createTheme();
   const {data, setData, post, processing, errors, reset} = useForm({
     name: '',
@@ -27,15 +22,17 @@ export default function Register () {
   };
   
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
+  const isLoggedIn = Boolean(authUser);
   
 
   return (
     <ThemeProvider theme={theme}>
       <Head title="音すくい | 新規登録" />
-      <main className='text-[var(--color-text-primary)]  bg-[var(--color-background)]'>
-        <h2 className='font-bold text-3xl text-center pt-8 md:pt-16'>ユーザー登録</h2>
+      <Header authUser={authUser}/>
+      <main className='pt-[132px] text-[var(--color-text-primary)]  bg-[var(--color-background)]'>
+        <h2 className='font-bold text-3xl text-center'>ユーザー登録</h2>
 
-        <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 md:mt-16 mx-auto'>
+        <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 mx-auto'>
           <Stack className='pb-16'>
             {/* todo 入力フォーム・フォントのサイズ・間隔設定 */}
             {/* 氏名 */}
