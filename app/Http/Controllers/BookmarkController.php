@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bookmark;
 use Illuminate\Http\Request;
 
-class BookmarksController extends Controller
+class BookmarkController extends Controller
 {
     /**
      * Display a listing of the resource.
