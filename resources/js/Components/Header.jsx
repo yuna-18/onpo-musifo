@@ -14,7 +14,7 @@ const Header = ({authUser}) => {
   };
 
   return (
-    <header className="fixed w-[100vw] z-100 bg-[var(--color-primary)] text-[var(--color-white)]">
+    <header className="fixed w-[100vw] z-50 bg-[var(--color-primary)] text-[var(--color-white)]">
       <nav className="flex justify-between p-4 pt-12 md:p-8 items-center">
         <Link
           href="/otosukui"

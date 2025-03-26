@@ -1,33 +1,118 @@
+import React, {useState} from 'react';
 import {Head, Link, useForm} from '@inertiajs/react';
 import Header from '@/Components/Header';
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
 import {Input, Select, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
-// todo MultiComboBoxはまだ未実装後で確認する
 export default function Register ({authUser}) {
   const theme = createTheme();
   const {data, setData, post, processing, errors, reset} = useForm({
     name: '',
     email: '',
     password: '',
-    area_ids:[],
-    subarea_ids:[],
-    music_category_ids:[],
-    music_inst_category_ids:[],
-    music_inst_ids:[],
+    area_ids: [],
+    subarea_ids: [],
+    music_category_ids: [],
+    music_inst_category_ids: [],
+    music_inst_ids: [],
   });
-
-  const submit = (e) => {
-    e.preventDefault();
-
-    // post(route('register'), {
-    //   onFinish: () => reset('password', 'password_confirmation'),
-    // });
-    post(route('register.store')); // 自作ルートに飛ばす
+  // note仮の連動マスターデータ（実際は Laravel から props で渡す想定）
+  const musicCategoryToInstCategoryMap = {
+    1: [101, 102],       // アンサンブル・室内楽 → 弦楽器・金管楽器
+    2: [102, 103],       // クラシック(大編成) → 金管楽器・打楽器
+    3: [101],            // クラシック・ソロ → 弦楽器
+    4: [103],            // ジャズ・ビッグバンド → 打楽器
+    5: [102],            // 吹奏楽・ブラスバンド → 金管楽器
+    6: [104],            // ピアノ → 鍵盤楽器
+    7: [105],            // 邦楽・和楽器 → 和楽器
+    8: [101, 103],       // ポピュラー・軽音楽 → 弦楽器・打楽器
+    9: [106],            // その他 → その他カテゴリ
   };
+  
+
+  const instCategoryToInstruments = {
+    101: [1001, 1002], // 弦楽器 → バイオリン、チェロ
+    102: [1003, 1004], // 金管楽器 → トランペット、ホルン
+    103: [1005, 1006], // 打楽器 → ドラム、ティンパニ
+    104: [1007],       // 鍵盤楽器 → ピアノ
+    105: [1008, 1009], // 和楽器 → 三味線、尺八
+    106: [1010],       // その他 → その他楽器
+  };
+  
+
+  const instCategoryOptions = [
+    { label: '弦楽器', value: 101 },
+    { label: '金管楽器', value: 102 },
+    { label: '打楽器', value: 103 },
+    { label: '鍵盤楽器', value: 104 },
+    { label: '和楽器', value: 105 },
+    { label: 'その他', value: 106 },
+  ];
+  
+
+  const instOptions = [
+    { label: 'バイオリン', value: 1001 },
+    { label: 'チェロ', value: 1002 },
+    { label: 'トランペット', value: 1003 },
+    { label: 'ホルン', value: 1004 },
+    { label: 'ドラム', value: 1005 },
+    { label: 'ティンパニ', value: 1006 },
+    { label: 'ピアノ', value: 1007 },
+    { label: '三味線', value: 1008 },
+    { label: '尺八', value: 1009 },
+    { label: 'その他楽器', value: 1010 },
+  ];
+  
+
 
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
   const isLoggedIn = Boolean(authUser);
+
+  const [selectedAreas, setSelectedAreas] = useState([]);
+  const [selectedSubAreas, setSelectedSubAreas] = useState([]);
+  const [selectedMusicCategories, setSelectedMusicCategories] = useState([]);
+  const [selectedMusicInstCategories, setSelectedMusicInstCategories] = useState([]);
+  const [selectedMusicInsts, setSelectedMusicInsts] = useState([]);
+
+  // チェックボックスで選んだ音楽カテゴリIDに応じて、 表示すべき楽器カテゴリを絞る処理
+  const filteredInstCategoryOptions = instCategoryOptions.filter((instCat) => {
+    const result = selectedMusicCategories.some((catId) =>
+      musicCategoryToInstCategoryMap[catId]?.includes(instCat.value)
+    );
+    console.log('instCat.value:', instCat.value, '| matches any music category:', result);
+    return result;
+  });
+
+  // マルチコンボボックスで選んだ楽器カテゴリIDに応じて、 表示すべき楽器名を絞る処理
+  const filteredInstOptions = instOptions.filter((inst) => {
+    return selectedMusicInstCategories.some((cat) =>
+      instCategoryToInstruments[cat.value]?.includes(inst.value)
+    );
+  });
+
+  // 音楽カテゴリの選択状態をトグルする処理
+  const handleMusicCategoryChange = (musicCatId) => {
+    let newSelected;
+    if (selectedMusicCategories.includes(musicCatId)) {
+      // すでに選ばれていたら除外
+      newSelected = selectedMusicCategories.filter((id) => id !== musicCatId);
+    } else {
+      // 選ばれていなければ追加
+      newSelected = [...selectedMusicCategories, musicCatId];
+    }
+    setSelectedMusicCategories(newSelected);
+    setData('music_category_ids', newSelected); // バックエンド送信用
+    console.log('selectedMusicCategories', selectedMusicCategories);
+    console.log('musicCategoryToInstCategoryMap', musicCategoryToInstCategoryMap);
+
+  };
+
+
+
+  const submit = (e) => {
+    e.preventDefault();
+    post(route('register.store')); // 自作ルートに飛ばす
+  };
 
 
   return (
@@ -81,7 +166,6 @@ export default function Register ({authUser}) {
                 name="furigana"
                 value={data.furigana}
                 autoComplete="furigana"
-                autoFocus
                 type='text'
                 required
                 onChange={(e) => setData('furigana', e.target.value)}
@@ -105,7 +189,6 @@ export default function Register ({authUser}) {
                 name="email"
                 value={data.email}
                 autoComplete="email"
-                autoFocus
                 type='email'
                 required
                 onChange={(e) => setData('email', e.target.value)}
@@ -129,7 +212,6 @@ export default function Register ({authUser}) {
                 name="password"
                 value={data.password}
                 autoComplete="password"
-                autoFocus
                 type='password'
                 required
                 onChange={(e) => setData('password', e.target.value)}
@@ -339,20 +421,27 @@ export default function Register ({authUser}) {
                     value: '47'
                   }
                 ]}
-                onDelete={() => {}}
-                onSelect={() => {}}
                 // 選択済みアイテムの例（中身は実際のデータに応じて変更）
-                selectedItems={[{}]}
+                selectedItems={selectedAreas}
+                onSelect={(item) => {
+                  const newSelected = [...selectedAreas, item];
+                  setSelectedAreas(newSelected);
+                  setData('area_ids', newSelected.map((item) => item.value));
+                }}
+                onDelete={(targetItem) => {
+                  const newSelected = selectedAreas.filter((item) => item.value !== targetItem.value);
+                  setSelectedAreas(newSelected);
+                  setData('area_ids', newSelected.map((item) => item.value));
+                }}
               />
             </FormControl>
             {/* 地域区分 ←Checkbox */}
-            {/* 好きな音楽ジャンル ←CheckBox */}
-            <Fieldset
+            {/* <Fieldset
+              title="地域区分"
               errorMessages=""
               exampleMessage=""
-              helpMessage="検索・メルマガ配信のために利用します。(複数選択可)"
+              helpMessage="地域に合わせた、より詳細な情報をお届けしやすくするために必要です。(複数選択可)"
               supplementaryMessage=""
-              title="好きな音楽ジャンル"
               statusLabelProps={{
                 children: '任意',
                 type: 'grey'
@@ -445,13 +534,120 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_other"
                   name="fav_other"
-                  value={data.pops}
-                  onChange={(e) => setData('pops', e.target.value)}
+                  value={data.fav_other}
+                  onChange={(e) => setData('fav_other', e.target.value)}
                   className=''
                 >
                   その他
                 </CheckBox>
 
+              </Cluster>
+            </Fieldset> */}
+            {/* 経験・興味のある音楽ジャンル ←CheckBox */}
+            <Fieldset
+              errorMessages=""
+              exampleMessage=""
+              helpMessage="検索・メルマガ配信のために利用します。(複数選択可)"
+              supplementaryMessage=""
+              title="経験・興味のある音楽カテゴリ"
+              statusLabelProps={{
+                children: '任意',
+                type: 'grey'
+              }}
+            >
+              <Cluster
+                gap={{
+                  column: 1.25,
+                  row: 0.5
+                }}>
+                <CheckBox
+                  id="fav_chamber"
+                  name="fav_chamber"
+                  checked={selectedMusicCategories.includes(1)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(1)}
+                  className=''
+                >
+                  アンサンブル・室内楽
+                </CheckBox>
+
+                <CheckBox
+                  id="fav_orchestra"
+                  name="fav_orchestra"
+                  checked={selectedMusicCategories.includes(2)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(2)}
+                  className=''
+                >
+                  クラシック(オーケストラ大編成)
+                </CheckBox>
+
+                <CheckBox
+                  id="fav_solo"
+                  name="fav_solo"
+                  checked={selectedMusicCategories.includes(3)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(3)}
+                  className=''
+                >
+                  クラシック・ソロ
+                </CheckBox>
+
+                <CheckBox
+                  id="fav_jazz"
+                  name="fav_jazz"
+                  checked={selectedMusicCategories.includes(4)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(4)}
+                  className=''
+                >
+                  ジャズ・ビッグバンド
+                </CheckBox>
+
+                <CheckBox
+                  id="fav_brass_band"
+                  name="fav_brass_band"
+                  checked={selectedMusicCategories.includes(5)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(5)}
+                  className=''
+                >
+                  吹奏楽・ブラスバンド
+                </CheckBox>
+
+                <CheckBox
+                  id="fav_piano"
+                  name="fav_piano"
+                  checked={selectedMusicCategories.includes(6)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(6)}
+                  className=''
+                >
+                  ピアノ
+                </CheckBox>
+
+                <CheckBox
+                  id="fav_japanese"
+                  name="fav_japanese"
+                  checked={selectedMusicCategories.includes(7)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(7)}
+                  className=''
+                >
+                  邦楽・和楽器
+                </CheckBox>
+
+                <CheckBox
+                  id="fav_pops"
+                  name="fav_pops"
+                  checked={selectedMusicCategories.includes(8)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(8)}
+                  className=''
+                >
+                  ポピュラー・軽音楽
+                </CheckBox>
+                <CheckBox
+                  id="fav_other"
+                  name="fav_other"
+                  checked={selectedMusicCategories.includes(9)} // IDを指定
+                  onChange={() => handleMusicCategoryChange(9)}
+                  className=''
+                >
+                  その他
+                </CheckBox>
               </Cluster>
             </Fieldset>
             {/* メールマガジン */}
@@ -498,13 +694,13 @@ export default function Register ({authUser}) {
                 利用する
               </CheckBox>
             </Fieldset>
-            {/* 経験楽器(大分類) */}
+            {/* 経験・興味のある楽器カテゴリ */}
             <Fieldset
               errorMessages=""
               exampleMessage=""
-              helpMessage="音楽ジャンルを選択後、おおまかな楽器の分類を選択してください。(複数選択可)"
+              helpMessage="おおまかな楽器の分類を選択してください。(複数選択可)"
               supplementaryMessage=""
-              title="経験楽器(大分類)"
+              title="経験・興味のある楽器カテゴリ"
               statusLabelProps={{
                 children: '任意',
                 type: 'grey'
@@ -512,127 +708,29 @@ export default function Register ({authUser}) {
               className='block'
             >
               <Stack>
-                {/* 経験した音楽ジャンル */}
-                <Cluster
-                  gap={{
-                    column: 1.25,
-                    row: 0.5
-                  }}>
-                  <CheckBox
-                    id="exp_chamber"
-                    name="exp_chamber"
-                    value={data.exp_chamber}
-                    onChange={(e) => setData('exp_chamber', e.target.value)}
-                    className=''
-                  >
-                    アンサンブル・室内楽
-                  </CheckBox>
-
-                  <CheckBox
-                    id="exp_orchestra"
-                    name="exp_orchestra"
-                    value={data.exp_orchestra}
-                    onChange={(e) => setData('exp_orchestra', e.target.value)}
-                    className=''
-                  >
-                    クラシック(オーケストラ大編成)
-                  </CheckBox>
-
-                  <CheckBox
-                    id="exp_solo"
-                    name="exp_solo"
-                    value={data.exp_solo}
-                    onChange={(e) => setData('exp_solo', e.target.value)}
-                    className=''
-                  >
-                    クラシック・ソロ
-                  </CheckBox>
-
-                  <CheckBox
-                    id="exp_jazz"
-                    name="exp_jazz"
-                    value={data.exp_jazz}
-                    onChange={(e) => setData('exp_jazz', e.target.value)}
-                    className=''
-                  >
-                    ジャズ・ビッグバンド
-                  </CheckBox>
-
-                  <CheckBox
-                    id="exp_brass_band"
-                    name="exp_brass_band"
-                    value={data.exp_brass_band}
-                    onChange={(e) => setData('exp_brass_band', e.target.value)}
-                    className=''
-                  >
-                    吹奏楽・ブラスバンド
-                  </CheckBox>
-
-                  <CheckBox
-                    id="exp_piano"
-                    name="exp_piano"
-                    value={data.exp_piano}
-                    onChange={(e) => setData('exp_piano', e.target.value)}
-                    className=''
-                  >
-                    ピアノ
-                  </CheckBox>
-
-                  <CheckBox
-                    id="exp_japanese"
-                    name="exp_japanese"
-                    value={data.exp_japanese}
-                    onChange={(e) => setData('exp_japanese', e.target.value)}
-                    className=''
-                  >
-                    邦楽・和楽器
-                  </CheckBox>
-
-                  <CheckBox
-                    id="exp_pops"
-                    name="exp_pops"
-                    value={data.exp_pops}
-                    onChange={(e) => setData('exp_pops', e.target.value)}
-                    className=''
-                  >
-                    ポピュラー・軽音楽
-                  </CheckBox>
-                  <CheckBox
-                    id="exp_other"
-                    name="exp_other"
-                    value={data.exp_other}
-                    onChange={(e) => setData('exp_other', e.target.value)}
-                    className=''
-                  >
-                    その他
-                  </CheckBox>
-                </Cluster>
                 <MultiComboBox
-                  items={[
-                    {
-                      label: 'option 1',
-                      value: 'value-1'
-                    },
-                    {
-                      label: 'option 2',
-                      value: 'value-2'
-                    }
-                  ]}
-                  onDelete={() => {}}
-                  onSelect={() => {}}
-                  selectedItems={[
-                    {}
-                  ]}
+                  items={filteredInstCategoryOptions}
+                  selectedItems={selectedMusicInstCategories}
+                  onSelect={(item) => {
+                    const newSelected = [...selectedMusicInstCategories, item];
+                    setSelectedMusicInstCategories(newSelected);
+                    setData('music_inst_category_ids', newSelected.map((item) => item.value));
+                  }}
+                  onDelete={(targetItem) => {
+                    const newSelected = selectedMusicInstCategories.filter((item) => item.value !== targetItem.value);
+                    setSelectedMusicInstCategories(newSelected);
+                    setData('music_inst_category_ids', newSelected.map((item) => item.value));
+                  }}
                 />
               </Stack>
             </Fieldset>
-            {/* 経験楽器(小分類) */}
+            {/* 経験・興味のある楽器名 */}
             <Fieldset
               errorMessages=""
               exampleMessage=""
               helpMessage="楽器の中でも細かな分類を選択してください。(複数選択可)"
               supplementaryMessage=""
-              title="経験楽器(小分類)"
+              title="経験・興味のある楽器名"
               statusLabelProps={{
                 children: '任意',
                 type: 'grey'
@@ -650,11 +748,17 @@ export default function Register ({authUser}) {
                     value: 'value-2'
                   }
                 ]}
-                onDelete={() => {}}
-                onSelect={() => {}}
-                selectedItems={[
-                  {}
-                ]}
+                selectedItems={selectedMusicInsts}
+                onSelect={(item) => {
+                  const newSelected = [...selectedMusicInsts, item];
+                  setSelectedMusicInsts(newSelected);
+                  setData('music_inst_ids', newSelected.map((item) => item.value));
+                }}
+                onDelete={(targetItem) => {
+                  const newSelected = selectedMusicInsts.filter((item) => item.value !== targetItem.value);
+                  setSelectedMusicInsts(newSelected);
+                  setData('music_inst_ids', newSelected.map((item) => item.value));
+                }}
               />
             </Fieldset>
           </Stack>
