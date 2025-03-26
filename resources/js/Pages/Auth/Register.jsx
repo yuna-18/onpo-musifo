@@ -10,25 +10,30 @@ export default function Register ({authUser}) {
     name: '',
     email: '',
     password: '',
-    password_confirmation: '',
+    area_ids:[],
+    subarea_ids:[],
+    music_category_ids:[],
+    music_inst_category_ids:[],
+    music_inst_ids:[],
   });
 
   const submit = (e) => {
     e.preventDefault();
 
-    post(route('register'), {
-      onFinish: () => reset('password', 'password_confirmation'),
-    });
+    // post(route('register'), {
+    //   onFinish: () => reset('password', 'password_confirmation'),
+    // });
+    post(route('register.store')); // 自作ルートに飛ばす
   };
-  
+
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
   const isLoggedIn = Boolean(authUser);
-  
+
 
   return (
     <ThemeProvider theme={theme}>
       <Head title="音すくい | 新規登録" />
-      <Header authUser={authUser}/>
+      <Header authUser={authUser} />
       <main className='pt-[132px] text-[var(--color-text-primary)]  bg-[var(--color-background)]'>
         <h2 className='font-bold text-3xl text-center'>ユーザー登録</h2>
 
@@ -47,17 +52,6 @@ export default function Register ({authUser}) {
                 type: 'red'
               }}
             >
-              {/* <InputLabel htmlFor="name" value="Name" />
-            <TextInput
-              id="name"
-              name="name"
-              value={data.name}
-              className="mt-1 block w-full"
-              autoComplete="name"
-              isFocused={true}
-              onChange={(e) => setData('name', e.target.value)}
-              required
-            /> */}
               <Input
                 id="name"
                 name="name"
@@ -149,10 +143,10 @@ export default function Register ({authUser}) {
               exampleMessage=""
               errorMessages={''}
               supplementaryMessage=""
-            // statusLabelProps={{
-            //   children: '必須',
-            //   type: 'red'
-            // }}
+              statusLabelProps={{
+                children: '任意',
+                type: 'grey'
+              }}
             >
               <MultiComboBox
                 items={[

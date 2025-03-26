@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\BookmarkController;
 
 Route::get('/', function () {
@@ -32,6 +33,7 @@ Route::middleware('auth')->group(function () {
   Route::post('/favorite', [BookmarkController::class, 'store'])->name('favorite.store');
 });
 
+Route::post('/register/store', [RegisterController::class, 'store'])->name('register.store');
 
 Route::get('/smarthr-test', function () {
   return Inertia::render('SmarthrTest');
