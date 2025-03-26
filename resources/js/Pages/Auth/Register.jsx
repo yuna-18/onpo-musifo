@@ -28,7 +28,7 @@ export default function Register ({authUser}) {
     8: [101, 103],       // ポピュラー・軽音楽 → 弦楽器・打楽器
     9: [106],            // その他 → その他カテゴリ
   };
-  
+
 
   const instCategoryToInstruments = {
     101: [1001, 1002], // 弦楽器 → バイオリン、チェロ
@@ -38,74 +38,105 @@ export default function Register ({authUser}) {
     105: [1008, 1009], // 和楽器 → 三味線、尺八
     106: [1010],       // その他 → その他楽器
   };
-  
+  const areaToSubarea = {
+    101: [1001, 1002], // 弦楽器 → バイオリン、チェロ
+    102: [1003, 1004], // 金管楽器 → トランペット、ホルン
+    103: [1005, 1006], // 打楽器 → ドラム、ティンパニ
+    104: [1007],       // 鍵盤楽器 → ピアノ
+    105: [1008, 1009], // 和楽器 → 三味線、尺八
+    106: [1010],       // その他 → その他楽器
+  };
+
 
   const instCategoryOptions = [
-    { label: '弦楽器', value: 101 },
-    { label: '金管楽器', value: 102 },
-    { label: '打楽器', value: 103 },
-    { label: '鍵盤楽器', value: 104 },
-    { label: '和楽器', value: 105 },
-    { label: 'その他', value: 106 },
+    {label: '弦楽器', value: 101},
+    {label: '金管楽器', value: 102},
+    {label: '打楽器', value: 103},
+    {label: '鍵盤楽器', value: 104},
+    {label: '和楽器', value: 105},
+    {label: 'その他', value: 106},
   ];
-  
+  const areaOptions = [
+    {label: '埼玉県', value: 101},
+    {label: '栃木県', value: 102},
+    {label: '茨城県', value: 103},
+    {label: '群馬県', value: 104},
+    {label: '神奈川県', value: 105},
+  ];
+
 
   const instOptions = [
-    { label: 'バイオリン', value: 1001 },
-    { label: 'チェロ', value: 1002 },
-    { label: 'トランペット', value: 1003 },
-    { label: 'ホルン', value: 1004 },
-    { label: 'ドラム', value: 1005 },
-    { label: 'ティンパニ', value: 1006 },
-    { label: 'ピアノ', value: 1007 },
-    { label: '三味線', value: 1008 },
-    { label: '尺八', value: 1009 },
-    { label: 'その他楽器', value: 1010 },
+    {label: 'バイオリン', value: 1001},
+    {label: 'チェロ', value: 1002},
+    {label: 'トランペット', value: 1003},
+    {label: 'ホルン', value: 1004},
+    {label: 'ドラム', value: 1005},
+    {label: 'ティンパニ', value: 1006},
+    {label: 'ピアノ', value: 1007},
+    {label: '三味線', value: 1008},
+    {label: '尺八', value: 1009},
+    {label: 'その他楽器', value: 1010},
   ];
-  
+  const subareaOptions = [
+    {label: '北部', value: 1001},
+    {label: '西部', value: 1002},
+    {label: '東部', value: 1003},
+    {label: '中央部', value: 1004},
+    {label: '南部', value: 1005},
+  ];
+
 
 
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
   const isLoggedIn = Boolean(authUser);
 
-  const [selectedAreas, setSelectedAreas] = useState([]);
-  const [selectedSubAreas, setSelectedSubAreas] = useState([]);
+  // MultiComboBoxで選んだ親アイテム
+  const [selectedAreaItems, setSelectedAreaItems] = useState([]);
+const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
+  // 表示されたCheckBoxの中で選ばれている子アイテム
+  const [selectedInstItems, setSelectedInstItems] = useState([]);
+  const [selectedSubareaItems, setSelectedSubareaItems] = useState([]);
+  // 音楽カテゴリ状態保持
   const [selectedMusicCategories, setSelectedMusicCategories] = useState([]);
-  const [selectedMusicInstCategories, setSelectedMusicInstCategories] = useState([]);
-  const [selectedMusicInsts, setSelectedMusicInsts] = useState([]);
 
-  // チェックボックスで選んだ音楽カテゴリIDに応じて、 表示すべき楽器カテゴリを絞る処理
-  const filteredInstCategoryOptions = instCategoryOptions.filter((instCat) => {
-    const result = selectedMusicCategories.some((catId) =>
-      musicCategoryToInstCategoryMap[catId]?.includes(instCat.value)
-    );
-    console.log('instCat.value:', instCat.value, '| matches any music category:', result);
-    return result;
-  });
-
-  // マルチコンボボックスで選んだ楽器カテゴリIDに応じて、 表示すべき楽器名を絞る処理
-  const filteredInstOptions = instOptions.filter((inst) => {
-    return selectedMusicInstCategories.some((cat) =>
-      instCategoryToInstruments[cat.value]?.includes(inst.value)
-    );
-  });
-
-  // 音楽カテゴリの選択状態をトグルする処理
-  const handleMusicCategoryChange = (musicCatId) => {
-    let newSelected;
-    if (selectedMusicCategories.includes(musicCatId)) {
-      // すでに選ばれていたら除外
-      newSelected = selectedMusicCategories.filter((id) => id !== musicCatId);
-    } else {
-      // 選ばれていなければ追加
-      newSelected = [...selectedMusicCategories, musicCatId];
-    }
-    setSelectedMusicCategories(newSelected);
-    setData('music_category_ids', newSelected); // バックエンド送信用
-    console.log('selectedMusicCategories', selectedMusicCategories);
-    console.log('musicCategoryToInstCategoryMap', musicCategoryToInstCategoryMap);
-
+  // 汎用関数
+  // マルチコンボボックスで選んだ結果から、表示すべきチェックボックスを絞る処理
+  const getFilteredChildOptions = (selectedParents, relationMap, childOptions) => {
+    return childOptions.filter((child) => {
+      return selectedParents.some((parent) =>
+        relationMap[parent.value]?.includes(child.value)
+      );
+    });
   };
+
+  // オブジェクト配列用
+  const toggleItemInList = (currentList, item) => {
+    const exists = currentList.some((i) => i.value === item.value);
+    return exists
+      ? currentList.filter((i) => i.value !== item.value)
+      : [...currentList, item];
+  };
+
+
+
+  // チェックボックス→マルチコンボボックスの連動処理
+  // 音楽カテゴリ→楽器カテゴリの連動
+  const filteredInstCategoryOptions = instCategoryOptions.filter((instCat) =>
+    selectedMusicCategories.some(
+      (cat) => musicCategoryToInstCategoryMap[cat.value]?.includes(instCat.value)
+    )
+  );
+
+  const filteredInstrumentOptions = getFilteredChildOptions(
+    selectedInstCategoryItems,                // MultiComboBoxで選んだ楽器カテゴリ
+    instCategoryToInstruments,    // 楽器カテゴリ → 楽器名 の連携Map
+    instOptions                   // 全楽器一覧
+  );
+  const filteredSubareaOptions = getFilteredChildOptions(
+    selectedAreaItems,                // MultiComboBoxで選んだ都道府県
+    areaToSubarea,    // 都道府県 → 地域区分 の連携Map
+    subareaOptions                   // 地域区分一覧
+  );
 
 
 
@@ -119,7 +150,7 @@ export default function Register ({authUser}) {
     <ThemeProvider theme={theme}>
       <Head title="音すくい | 新規登録" />
       <Header authUser={authUser} />
-      <main className='pt-[132px] text-[var(--color-text-primary)]  bg-[var(--color-background)]'>
+      <main className='pt-[132px] text-[var(--color-text-primary)]  bg-[var(--color-background)] select-none'>
         <h2 className='font-bold text-3xl text-center'>ユーザー登録</h2>
 
         <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 mx-auto'>
@@ -231,212 +262,25 @@ export default function Register ({authUser}) {
               }}
             >
               <MultiComboBox
-                items={[
-                  {
-                    label: '北海道',
-                    value: '1'
-                  },
-                  {
-                    label: '青森県',
-                    value: '2'
-                  },
-                  {
-                    label: '岩手県',
-                    value: '3'
-                  },
-                  {
-                    label: '宮城県',
-                    value: '4'
-                  },
-                  {
-                    label: '秋田県',
-                    value: '5'
-                  },
-                  {
-                    label: '山形県',
-                    value: '6'
-                  },
-                  {
-                    label: '福島県',
-                    value: '7'
-                  },
-                  {
-                    label: '茨城県',
-                    value: '8'
-                  },
-                  {
-                    label: '栃木県',
-                    value: '9'
-                  },
-                  {
-                    label: '群馬県',
-                    value: '10'
-                  },
-                  {
-                    label: '埼玉県',
-                    value: '11'
-                  },
-                  {
-                    label: '千葉県',
-                    value: '12'
-                  },
-                  {
-                    label: '東京都',
-                    value: '13'
-                  },
-                  {
-                    label: '神奈川県',
-                    value: '14'
-                  },
-                  {
-                    label: '新潟県',
-                    value: '15'
-                  },
-                  {
-                    label: '富山県',
-                    value: '16'
-                  },
-                  {
-                    label: '石川県',
-                    value: '17'
-                  },
-                  {
-                    label: '福井県',
-                    value: '18'
-                  },
-                  {
-                    label: '山梨県',
-                    value: '19'
-                  },
-                  {
-                    label: '長野県',
-                    value: '20'
-                  },
-                  {
-                    label: '岐阜県',
-                    value: '21'
-                  },
-                  {
-                    label: '静岡県',
-                    value: '22'
-                  },
-                  {
-                    label: '愛知県',
-                    value: '23'
-                  },
-                  {
-                    label: '三重県',
-                    value: '24'
-                  },
-                  {
-                    label: '滋賀県',
-                    value: '25'
-                  },
-                  {
-                    label: '京都府',
-                    value: '26'
-                  },
-                  {
-                    label: '大阪府',
-                    value: '27'
-                  },
-                  {
-                    label: '兵庫県',
-                    value: '28'
-                  },
-                  {
-                    label: '奈良県',
-                    value: '29'
-                  },
-                  {
-                    label: '和歌山県',
-                    value: '30'
-                  },
-                  {
-                    label: '鳥取県',
-                    value: '31'
-                  },
-                  {
-                    label: '島根県',
-                    value: '32'
-                  },
-                  {
-                    label: '岡山県',
-                    value: '33'
-                  },
-                  {
-                    label: '広島県',
-                    value: '34'
-                  },
-                  {
-                    label: '山口県',
-                    value: '35'
-                  },
-                  {
-                    label: '徳島県',
-                    value: '36'
-                  },
-                  {
-                    label: '香川県',
-                    value: '37'
-                  },
-                  {
-                    label: '愛媛県',
-                    value: '38'
-                  },
-                  {
-                    label: '高知県',
-                    value: '39'
-                  },
-                  {
-                    label: '福岡県',
-                    value: '40'
-                  },
-                  {
-                    label: '佐賀県',
-                    value: '41'
-                  },
-                  {
-                    label: '長崎県',
-                    value: '42'
-                  },
-                  {
-                    label: '熊本県',
-                    value: '43'
-                  },
-                  {
-                    label: '大分県',
-                    value: '44'
-                  },
-                  {
-                    label: '宮崎県',
-                    value: '45'
-                  },
-                  {
-                    label: '鹿児島県',
-                    value: '46'
-                  },
-                  {
-                    label: '沖縄県',
-                    value: '47'
-                  }
-                ]}
+                items={areaOptions}
                 // 選択済みアイテムの例（中身は実際のデータに応じて変更）
-                selectedItems={selectedAreas}
+                selectedItems={selectedAreaItems}
                 onSelect={(item) => {
-                  const newSelected = [...selectedAreas, item];
-                  setSelectedAreas(newSelected);
+                  if(!item?.value) return;
+                  const newSelected = [...selectedAreaItems, item];
+                  setSelectedAreaItems(newSelected);
                   setData('area_ids', newSelected.map((item) => item.value));
                 }}
                 onDelete={(targetItem) => {
-                  const newSelected = selectedAreas.filter((item) => item.value !== targetItem.value);
-                  setSelectedAreas(newSelected);
+                  if(!targetItem?.value) return;
+                  const newSelected = selectedAreaItems.filter((item) => item.value !== targetItem.value);
+                  setSelectedAreaItems(newSelected);
                   setData('area_ids', newSelected.map((item) => item.value));
                 }}
               />
             </FormControl>
             {/* 地域区分 ←Checkbox */}
-            {/* <Fieldset
+            <Fieldset
               title="地域区分"
               errorMessages=""
               exampleMessage=""
@@ -452,97 +296,23 @@ export default function Register ({authUser}) {
                   column: 1.25,
                   row: 0.5
                 }}>
-                <CheckBox
-                  id="fav_chamber"
-                  name="fav_chamber"
-                  value={data.fav_chamber}
-                  onChange={(e) => setData('fav_chamber', e.target.value)}
-                  className=''
-                >
-                  アンサンブル・室内楽
-                </CheckBox>
-
-                <CheckBox
-                  id="fav_orchestra"
-                  name="fav_orchestra"
-                  value={data.fav_orchestra}
-                  onChange={(e) => setData('fav_orchestra', e.target.value)}
-                  className=''
-                >
-                  クラシック(オーケストラ大編成)
-                </CheckBox>
-
-                <CheckBox
-                  id="fav_solo"
-                  name="fav_solo"
-                  value={data.fav_solo}
-                  onChange={(e) => setData('fav_solo', e.target.value)}
-                  className=''
-                >
-                  クラシック・ソロ
-                </CheckBox>
-
-                <CheckBox
-                  id="fav_jazz"
-                  name="fav_jazz"
-                  value={data.fav_jazz}
-                  onChange={(e) => setData('fav_jazz', e.target.value)}
-                  className=''
-                >
-                  ジャズ・ビッグバンド
-                </CheckBox>
-
-                <CheckBox
-                  id="fav_brass_band"
-                  name="fav_brass_band"
-                  value={data.fav_brass_band}
-                  onChange={(e) => setData('fav_brass_band', e.target.value)}
-                  className=''
-                >
-                  吹奏楽・ブラスバンド
-                </CheckBox>
-
-                <CheckBox
-                  id="fav_piano"
-                  name="fav_piano"
-                  value={data.fav_piano}
-                  onChange={(e) => setData('fav_piano', e.target.value)}
-                  className=''
-                >
-                  ピアノ
-                </CheckBox>
-
-                <CheckBox
-                  id="fav_japanese"
-                  name="fav_japanese"
-                  value={data.fav_japanese}
-                  onChange={(e) => setData('fav_japanese', e.target.value)}
-                  className=''
-                >
-                  邦楽・和楽器
-                </CheckBox>
-
-                <CheckBox
-                  id="fav_pops"
-                  name="fav_pops"
-                  value={data.fav_pops}
-                  onChange={(e) => setData('fav_pops', e.target.value)}
-                  className=''
-                >
-                  ポピュラー・軽音楽
-                </CheckBox>
-                <CheckBox
-                  id="fav_other"
-                  name="fav_other"
-                  value={data.fav_other}
-                  onChange={(e) => setData('fav_other', e.target.value)}
-                  className=''
-                >
-                  その他
-                </CheckBox>
-
+                {filteredSubareaOptions.map((subarea) => (
+                  <CheckBox
+                    key={subarea.value}
+                    id={`subarea_${subarea.value}`}
+                    name={`subarea_${subarea.value}`}
+                      checked={selectedSubareaItems.some((s) => s.value === subarea.value)}
+                      onChange={() => {
+                        const newList = toggleItemInList(selectedSubareaItems, subarea)
+                        setSelectedSubareaItems(newList)
+                        setData('subarea_ids', newList.map((i) => i.value))
+                      }}
+                  >
+                    {subarea.label}
+                  </CheckBox>
+                ))}
               </Cluster>
-            </Fieldset> */}
+            </Fieldset>
             {/* 経験・興味のある音楽ジャンル ←CheckBox */}
             <Fieldset
               errorMessages=""
@@ -563,9 +333,13 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_chamber"
                   name="fav_chamber"
-                  checked={selectedMusicCategories.includes(1)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(1)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 1)}
+                  onChange={() => {
+                    const item = { label: 'アンサンブル・室内楽', value: 1 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   アンサンブル・室内楽
                 </CheckBox>
@@ -573,9 +347,13 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_orchestra"
                   name="fav_orchestra"
-                  checked={selectedMusicCategories.includes(2)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(2)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 2)}
+                  onChange={() => {
+                    const item = { label: 'クラシック(オーケストラ大編成)', value: 2 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   クラシック(オーケストラ大編成)
                 </CheckBox>
@@ -583,9 +361,13 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_solo"
                   name="fav_solo"
-                  checked={selectedMusicCategories.includes(3)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(3)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 3)}
+                  onChange={() => {
+                    const item = { label: 'クラシック・ソロ', value: 3 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   クラシック・ソロ
                 </CheckBox>
@@ -593,9 +375,13 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_jazz"
                   name="fav_jazz"
-                  checked={selectedMusicCategories.includes(4)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(4)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 4)}
+                  onChange={() => {
+                    const item = { label: 'ジャズ・ビッグバンド', value: 4 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   ジャズ・ビッグバンド
                 </CheckBox>
@@ -603,9 +389,13 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_brass_band"
                   name="fav_brass_band"
-                  checked={selectedMusicCategories.includes(5)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(5)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 5)}
+                  onChange={() => {
+                    const item = { label: '吹奏楽・ブラスバンド', value: 5 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   吹奏楽・ブラスバンド
                 </CheckBox>
@@ -613,9 +403,13 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_piano"
                   name="fav_piano"
-                  checked={selectedMusicCategories.includes(6)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(6)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 6)}
+                  onChange={() => {
+                    const item = { label: 'ピアノ', value: 6 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   ピアノ
                 </CheckBox>
@@ -623,9 +417,13 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_japanese"
                   name="fav_japanese"
-                  checked={selectedMusicCategories.includes(7)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(7)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 7)}
+                  onChange={() => {
+                    const item = { label: '邦楽・和楽器', value: 7 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   邦楽・和楽器
                 </CheckBox>
@@ -633,18 +431,26 @@ export default function Register ({authUser}) {
                 <CheckBox
                   id="fav_pops"
                   name="fav_pops"
-                  checked={selectedMusicCategories.includes(8)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(8)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 8)}
+                  onChange={() => {
+                    const item = { label: 'ポピュラー・軽音楽', value: 8 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   ポピュラー・軽音楽
                 </CheckBox>
                 <CheckBox
                   id="fav_other"
                   name="fav_other"
-                  checked={selectedMusicCategories.includes(9)} // IDを指定
-                  onChange={() => handleMusicCategoryChange(9)}
-                  className=''
+                  checked={selectedMusicCategories.some((i) => i.value === 9)} // IDを指定
+                  onChange={() => {
+                    const item = { label: 'その他', value: 9 };
+                    const newList = toggleItemInList(selectedMusicCategories, item);
+                    setSelectedMusicCategories(newList);
+                    setData('music_category_ids', newList.map((i) => i.value));
+                  }}
                 >
                   その他
                 </CheckBox>
@@ -710,15 +516,17 @@ export default function Register ({authUser}) {
               <Stack>
                 <MultiComboBox
                   items={filteredInstCategoryOptions}
-                  selectedItems={selectedMusicInstCategories}
+                  selectedItems={selectedInstCategoryItems}
                   onSelect={(item) => {
-                    const newSelected = [...selectedMusicInstCategories, item];
-                    setSelectedMusicInstCategories(newSelected);
+                    if (!item?.value) return;
+                    const newSelected = [...selectedInstCategoryItems, item];
+                    setSelectedInstCategoryItems(newSelected);
                     setData('music_inst_category_ids', newSelected.map((item) => item.value));
                   }}
                   onDelete={(targetItem) => {
-                    const newSelected = selectedMusicInstCategories.filter((item) => item.value !== targetItem.value);
-                    setSelectedMusicInstCategories(newSelected);
+                    if (!targetItem?.value) return;
+                    const newSelected = selectedInstCategoryItems.filter((item) => item.value !== targetItem.value);
+                    setSelectedInstCategoryItems(newSelected);
                     setData('music_inst_category_ids', newSelected.map((item) => item.value));
                   }}
                 />
@@ -737,29 +545,27 @@ export default function Register ({authUser}) {
               }}
               className='block'
             >
-              <MultiComboBox
-                items={[
-                  {
-                    label: 'option 1',
-                    value: 'value-1'
-                  },
-                  {
-                    label: 'option 2',
-                    value: 'value-2'
-                  }
-                ]}
-                selectedItems={selectedMusicInsts}
-                onSelect={(item) => {
-                  const newSelected = [...selectedMusicInsts, item];
-                  setSelectedMusicInsts(newSelected);
-                  setData('music_inst_ids', newSelected.map((item) => item.value));
-                }}
-                onDelete={(targetItem) => {
-                  const newSelected = selectedMusicInsts.filter((item) => item.value !== targetItem.value);
-                  setSelectedMusicInsts(newSelected);
-                  setData('music_inst_ids', newSelected.map((item) => item.value));
-                }}
-              />
+              <Cluster
+                gap={{
+                  column: 1.25,
+                  row: 0.5
+                }}>
+                {filteredInstrumentOptions.map((inst) => (
+                  <CheckBox
+                    key={inst.value}
+                    id={`inst_${inst.value}`}
+                    name={`inst_${inst.value}`}
+                    checked={selectedInstItems.some((i) => i.value === inst.value)}
+                    onChange={() => {
+                      const newList = toggleItemInList(selectedInstItems, inst);
+                      setSelectedInstItems(newList);
+                      setData('music_inst_ids', newList.map((i) => i.value));
+                    }}
+                  >
+                    {inst.label}
+                  </CheckBox>
+                ))}
+              </Cluster>
             </Fieldset>
           </Stack>
           <div className='flex flex-col mx-auto md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
@@ -801,6 +607,6 @@ export default function Register ({authUser}) {
           </div>
         </form>
       </main>
-    </ThemeProvider>
+    </ThemeProvider >
   );
 }
