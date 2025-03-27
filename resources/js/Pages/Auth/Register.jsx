@@ -114,14 +114,14 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
         <h2 className='font-bold text-3xl text-center'>ユーザー登録</h2>
         {/* optimize エラーが出た時にカーソルを入力欄に合わせる */}
         <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 mx-auto'>
-          <Stack className='pb-16'>
+          <Stack className='pb-16 gap-y-2'>
             {/* todo 入力フォーム・フォントのサイズ・間隔設定 */}
             {/* 氏名 */}
             <FormControl
               autoBindErrorInput
               title="氏名"
-              helpMessage=""
-              exampleMessage=""
+              helpMessage="スペースなしで入力してください"
+              exampleMessage="山田太郎"
               errorMessages={errors.name ? [errors.name] : []}
               supplementaryMessage=""
               statusLabelProps={{
@@ -145,9 +145,9 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             <FormControl
               autoBindErrorInput
               title="フリガナ"
-              helpMessage="カタカナで入力してください。"
-              exampleMessage=""
-              errorMessages={errors.name ? [errors.name] : []}
+              helpMessage="カタカナ&スペースなしで入力してください。"
+              exampleMessage="ヤマダタロウ"
+              errorMessages={errors.furigana ? [errors.furigana] : []}
               supplementaryMessage=""
               statusLabelProps={{
                 children: '必須',
@@ -171,7 +171,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
               title="メールアドレス"
               helpMessage=""
               exampleMessage=""
-              errorMessages={errors.name ? [errors.name] : []}
+              errorMessages={errors.email ? [errors.email] : []}
               supplementaryMessage=""
               statusLabelProps={{
                 children: '必須',
@@ -195,7 +195,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
               title="パスワード"
               helpMessage="8文字以上で入力してください。"
               exampleMessage=""
-              errorMessages={errors.name ? [errors.name] : []}
+              errorMessages={errors.password ? [errors.password] : []}
               supplementaryMessage=""
               statusLabelProps={{
                 children: '必須',
