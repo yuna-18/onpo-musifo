@@ -8,6 +8,7 @@ export default function Register ({authUser}) {
   const theme = createTheme();
   const {data, setData, post, processing, errors, reset} = useForm({
     name: '',
+    furigana: '',
     email: '',
     password: '',
     area_ids: [],
@@ -109,15 +110,13 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
     });
   };
 
-  // オブジェクト配列用
+  // チェックボックストグル管理
   const toggleItemInList = (currentList, item) => {
     const exists = currentList.some((i) => i.value === item.value);
     return exists
       ? currentList.filter((i) => i.value !== item.value)
       : [...currentList, item];
   };
-
-
 
   // チェックボックス→マルチコンボボックスの連動処理
   // 音楽カテゴリ→楽器カテゴリの連動
@@ -142,7 +141,9 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
 
   const submit = (e) => {
     e.preventDefault();
-    post(route('register.store')); // 自作ルートに飛ばす
+    post(route('register.store'), {
+      data,
+    });
   };
 
 
@@ -580,30 +581,18 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
             >
               キャンセル
             </AnchorButton>
-            {/* todo 後で確認画面遷移ボタン実装 */}
-            <AnchorButton
-              href="../"
-              prefix=""
+            <Button
+            type='submit'
+            prefix=""
               size="default"
               suffix=""
               variant="primary"
               wide
               disabled={processing}
               className='h-[44px] bg-[var(--color-primary)] font-bold text-base/[1] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
-            >
-              確認
-            </AnchorButton>
-            {/* <Button
-            prefix=""
-            size="default"
-            suffix=""
-            type='submit'
-            variant="primary"
-            className=''
-            wide
           >
             確認
-          </Button> */}
+          </Button>
           </div>
         </form>
       </main>
