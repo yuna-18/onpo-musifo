@@ -100,7 +100,6 @@ class RegisterController extends Controller
       'musicInsts' => $musicInsts,
       'musicCategoryToInstCategoryMap' => $musicCategoryToInstCategoryMap,
       'instCategoryToInstruments' => $instCategoryToInstruments,
-      // dd($subareas),
     ]);
   }
 }

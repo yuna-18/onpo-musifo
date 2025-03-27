@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();                     // id
             $table->string('name', 100);      // 市区町村名
             // SubareasテーブルのFK
-            $table->foreignId('sub_area_id')
+            $table->foreignId('subarea_id')
                   ->constrained('subareas')
                   ->cascadeOnDelete();
 
