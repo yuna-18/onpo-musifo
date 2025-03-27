@@ -53,7 +53,7 @@ return new class extends Migration {
             // 新しい外部キー制約を追加
             // ここでは、カラム music_inst_id がマスターテーブル music_inst_categories の id を参照するようにする
             $table->foreign('music_inst_id', 'fk_users_mi_correct')
-                  ->references('id')->on('music_inst_categories')
+                  ->references('id')->on('music_insts')
                   ->onDelete('cascade');
         });
     }

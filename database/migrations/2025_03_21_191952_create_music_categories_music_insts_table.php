@@ -20,11 +20,7 @@ return new class extends Migration
     }
 
     public function down(): void
-    {
-        Schema::table('music_categories_music_insts', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('music_category_id');
-            $table->dropConstrainedForeignId('music_inst_id');
-        });
-        Schema::dropIfExists('music_categories_music_insts');
-    }
+{
+    Schema::dropIfExists('music_categories_music_insts');
+}
 };

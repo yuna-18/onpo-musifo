@@ -23,7 +23,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
   // データベースから取得した地域データ
   const areaOptions = areas;
   const subareaOptions = subareas;
-  console.log('🧩 first few subareaOptions:', subareaOptions.slice(0, 5));
+  // console.log('🧩 first few subareaOptions:', subareaOptions.slice(0, 5));
   // データベースから取得した音楽データ
   const musicCategoryOptions = musicCategories;
   const musicInstCategoryOptions = musicInstCategories;
@@ -47,8 +47,8 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
   // note汎用関数
   // マルチコンボボックスで選んだ結果から、表示すべきチェックボックスを絞る処理
   const getFilteredChildOptions = (selectedParents, relationMap, childOptions) => {
-    console.log('🐛 subarea filter:');
-    console.log('selectedAreaItems:', selectedAreaItems);
+    // console.log('🐛 subarea filter:');
+    // console.log('selectedAreaItems:', selectedAreaItems);
     // console.log('areaToSubarea:', areaToSubarea);
     // console.log('subareaOptions:', subareaOptions);
 
@@ -100,7 +100,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
 
   const submit = (e) => {
     e.preventDefault();
-    post(route('register.store'), {
+    post(route('user.register'), {
       data,
     });
   };
