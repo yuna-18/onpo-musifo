@@ -112,16 +112,17 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
       <Header authUser={authUser} />
       <main className='pt-[132px] text-[var(--color-text-primary)]  bg-[var(--color-background)] select-none'>
         <h2 className='font-bold text-3xl text-center'>ユーザー登録</h2>
-
+  {/* optimize エラーが出た時にカーソルを入力欄に合わせる */}
         <form onSubmit={submit} className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 mx-auto'>
           <Stack className='pb-16'>
             {/* todo 入力フォーム・フォントのサイズ・間隔設定 */}
             {/* 氏名 */}
             <FormControl
+              autoBindErrorInput
               title="氏名"
               helpMessage=""
               exampleMessage=""
-              errorMessages={''}
+              errorMessages={errors.name ? [errors.name] : []}
               supplementaryMessage=""
               statusLabelProps={{
                 children: '必須',
@@ -142,10 +143,11 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </FormControl>
             {/* フリガナ */}
             <FormControl
+              autoBindErrorInput
               title="フリガナ"
               helpMessage="カタカナで入力してください。"
               exampleMessage=""
-              errorMessages={''}
+              errorMessages={errors.name ? [errors.name] : []} 
               supplementaryMessage=""
               statusLabelProps={{
                 children: '必須',
@@ -165,10 +167,11 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </FormControl>
             {/* メールアドレス */}
             <FormControl
+              autoBindErrorInput
               title="メールアドレス"
               helpMessage=""
               exampleMessage=""
-              errorMessages={''}
+              errorMessages={errors.name ? [errors.name] : []} 
               supplementaryMessage=""
               statusLabelProps={{
                 children: '必須',
@@ -188,10 +191,11 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </FormControl>
             {/* パスワード */}
             <FormControl
+              autoBindErrorInput
               title="パスワード"
               helpMessage="8文字以上で入力してください。"
               exampleMessage=""
-              errorMessages={''}
+              errorMessages={errors.name ? [errors.name] : []} 
               supplementaryMessage=""
               statusLabelProps={{
                 children: '必須',
@@ -214,8 +218,8 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
               title="都道府県"
               helpMessage="地域に合わせた情報をお届けしやすくするために必要です。(複数選択可)"
               exampleMessage=""
-              errorMessages={''}
-              supplementaryMessage=""
+              errorMessages={errors.name ? [errors.name] : []} 
+              supplementaryMessage="この項目を選択すると、地域区分の選択肢が表示されます。"
               statusLabelProps={{
                 children: '任意',
                 type: 'grey'
@@ -242,10 +246,9 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             {/* 地域区分 ←Checkbox */}
             <Fieldset
               title="地域区分"
-              errorMessages=""
               exampleMessage=""
-              helpMessage="地域に合わせた、より詳細な情報をお届けしやすくするために必要です。上の都道府県の入力欄に入力すると選択肢が表示されます。(複数選択可)"
-              supplementaryMessage=""
+              helpMessage="地域に合わせた、より詳細な情報をお届けしやすくするために必要です。(複数選択可)"
+              supplementaryMessage="都道府県の項目を選択すると、選択肢が表示されます。"
               statusLabelProps={{
                 children: '任意',
                 type: 'grey'
@@ -275,10 +278,9 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </Fieldset>
             {/* 経験・興味のある音楽ジャンル ←CheckBox */}
             <Fieldset
-              errorMessages=""
               exampleMessage=""
               helpMessage="検索・メルマガ配信のために利用します。(複数選択可)"
-              supplementaryMessage=""
+              supplementaryMessage="この項目を選択すると、楽器カテゴリの項目が表示されます。"
               title="経験・興味のある音楽ジャンル"
               statusLabelProps={{
                 children: '任意',
@@ -418,7 +420,6 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </Fieldset>
             {/* メールマガジン */}
             <Fieldset
-              errorMessages=""
               exampleMessage=""
               helpMessage="地域に基づいた情報を配信します。"
               supplementaryMessage=""
@@ -440,7 +441,6 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </Fieldset>
             {/* メール通知機能 */}
             <Fieldset
-              errorMessages=""
               exampleMessage=""
               helpMessage="お気に入りしたサイトの情報をメールで希望日時に通知する機能です。"
               supplementaryMessage=""
@@ -462,10 +462,9 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </Fieldset>
             {/* 経験・興味のある楽器カテゴリ */}
             <Fieldset
-              errorMessages=""
               exampleMessage=""
-              helpMessage="楽器の分類を選択してください。上の音楽ジャンルの入力欄を入力すると選択肢が表示されます。(複数選択可)"
-              supplementaryMessage=""
+              helpMessage="楽器の分類を選択してください。(複数選択可)"
+              supplementaryMessage="音楽ジャンルを選択すると、選択肢が表示されます。"
               title="経験・興味のある楽器カテゴリ"
               statusLabelProps={{
                 children: '任意',
@@ -494,10 +493,9 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             </Fieldset>
             {/* 経験・興味のある楽器名 */}
             <Fieldset
-              errorMessages=""
               exampleMessage=""
-              helpMessage="楽器名を選択してください。上の楽器カテゴリ入力欄で選択した内容に応じて表示されます。(複数選択可)"
-              supplementaryMessage=""
+              helpMessage="楽器名を選択してください。(複数選択可)"
+              supplementaryMessage="楽器カテゴリを選択すると、選択肢が表示されます。"
               title="経験・興味のある楽器名"
               statusLabelProps={{
                 children: '任意',
