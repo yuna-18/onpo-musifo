@@ -17,7 +17,7 @@ const Header = ({authUser}) => {
     <header className="fixed w-[100vw] z-50 bg-[var(--color-primary)] text-[var(--color-white)]">
       <nav className="flex justify-between p-4 pt-12 md:p-8 items-center">
         <Link
-          href="/otosukui"
+          href="{route('top')}"
           className="font-bold text-2xl/[1.5] hover:opacity-90"
         >
           音すくい
@@ -49,7 +49,7 @@ const Header = ({authUser}) => {
         ) : (
           <div className='underline flex flex-col md:flex-row md:gap-x-6'>
             <Link
-              href={route('register')} className="flex font-bold text-base/[1] items-center hover:opacity-90">
+              href={route('user.register')} className="flex font-bold text-base/[1] items-center hover:opacity-90">
               <Images.RegistrationIcon alt="" className='w-5 fill-[var(--color-white)] ' />
               新規登録
             </Link>

@@ -2,9 +2,12 @@ import React, {useState} from 'react';
 import {Head, Link, useForm} from '@inertiajs/react';
 import Header from '@/Components/Header';
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
-import {Input, Select, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
+import {Input, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
-export default function Register ({authUser}) {
+export default function Register ({authUser, areas, subareas, musicCategories, musicInstCategories, musicInsts}) {
+  console.log('props', {areas, subareas, musicCategories, musicInstCategories, musicInsts});
+
+
   const theme = createTheme();
   const {data, setData, post, processing, errors, reset} = useForm({
     name: '',
@@ -48,44 +51,13 @@ export default function Register ({authUser}) {
     106: [1010],       // その他 → その他楽器
   };
 
-
-  const instCategoryOptions = [
-    {label: '弦楽器', value: 101},
-    {label: '金管楽器', value: 102},
-    {label: '打楽器', value: 103},
-    {label: '鍵盤楽器', value: 104},
-    {label: '和楽器', value: 105},
-    {label: 'その他', value: 106},
-  ];
-  const areaOptions = [
-    {label: '埼玉県', value: 101},
-    {label: '栃木県', value: 102},
-    {label: '茨城県', value: 103},
-    {label: '群馬県', value: 104},
-    {label: '神奈川県', value: 105},
-  ];
-
-
-  const instOptions = [
-    {label: 'バイオリン', value: 1001},
-    {label: 'チェロ', value: 1002},
-    {label: 'トランペット', value: 1003},
-    {label: 'ホルン', value: 1004},
-    {label: 'ドラム', value: 1005},
-    {label: 'ティンパニ', value: 1006},
-    {label: 'ピアノ', value: 1007},
-    {label: '三味線', value: 1008},
-    {label: '尺八', value: 1009},
-    {label: 'その他楽器', value: 1010},
-  ];
-  const subareaOptions = [
-    {label: '北部', value: 1001},
-    {label: '西部', value: 1002},
-    {label: '東部', value: 1003},
-    {label: '中央部', value: 1004},
-    {label: '南部', value: 1005},
-  ];
-
+  // データベースから取得した地域データ
+  const areaOptions = areas;
+  const subareaOptions = subareas;
+  // データベースから取得した音楽データ
+  const musicCategoryOptions = musicCategories;
+  const instCategoryOptions = musicInstCategories;
+  const instOptions = musicInsts;
 
 
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
@@ -93,14 +65,14 @@ export default function Register ({authUser}) {
 
   // MultiComboBoxで選んだ親アイテム
   const [selectedAreaItems, setSelectedAreaItems] = useState([]);
-const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
+  const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
   // 表示されたCheckBoxの中で選ばれている子アイテム
   const [selectedInstItems, setSelectedInstItems] = useState([]);
   const [selectedSubareaItems, setSelectedSubareaItems] = useState([]);
   // 音楽カテゴリ状態保持
   const [selectedMusicCategories, setSelectedMusicCategories] = useState([]);
 
-  // 汎用関数
+  // note汎用関数
   // マルチコンボボックスで選んだ結果から、表示すべきチェックボックスを絞る処理
   const getFilteredChildOptions = (selectedParents, relationMap, childOptions) => {
     return childOptions.filter((child) => {
@@ -267,13 +239,13 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                 // 選択済みアイテムの例（中身は実際のデータに応じて変更）
                 selectedItems={selectedAreaItems}
                 onSelect={(item) => {
-                  if(!item?.value) return;
+                  if (!item?.value) return;
                   const newSelected = [...selectedAreaItems, item];
                   setSelectedAreaItems(newSelected);
                   setData('area_ids', newSelected.map((item) => item.value));
                 }}
                 onDelete={(targetItem) => {
-                  if(!targetItem?.value) return;
+                  if (!targetItem?.value) return;
                   const newSelected = selectedAreaItems.filter((item) => item.value !== targetItem.value);
                   setSelectedAreaItems(newSelected);
                   setData('area_ids', newSelected.map((item) => item.value));
@@ -302,12 +274,12 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                     key={subarea.value}
                     id={`subarea_${subarea.value}`}
                     name={`subarea_${subarea.value}`}
-                      checked={selectedSubareaItems.some((s) => s.value === subarea.value)}
-                      onChange={() => {
-                        const newList = toggleItemInList(selectedSubareaItems, subarea)
-                        setSelectedSubareaItems(newList)
-                        setData('subarea_ids', newList.map((i) => i.value))
-                      }}
+                    checked={selectedSubareaItems.some((s) => s.value === subarea.value)}
+                    onChange={() => {
+                      const newList = toggleItemInList(selectedSubareaItems, subarea);
+                      setSelectedSubareaItems(newList);
+                      setData('subarea_ids', newList.map((i) => i.value));
+                    }}
                   >
                     {subarea.label}
                   </CheckBox>
@@ -336,7 +308,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_chamber"
                   checked={selectedMusicCategories.some((i) => i.value === 1)}
                   onChange={() => {
-                    const item = { label: 'アンサンブル・室内楽', value: 1 };
+                    const item = {label: 'アンサンブル・室内楽', value: 1};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -350,7 +322,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_orchestra"
                   checked={selectedMusicCategories.some((i) => i.value === 2)}
                   onChange={() => {
-                    const item = { label: 'クラシック(オーケストラ大編成)', value: 2 };
+                    const item = {label: 'クラシック(オーケストラ大編成)', value: 2};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -364,7 +336,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_solo"
                   checked={selectedMusicCategories.some((i) => i.value === 3)}
                   onChange={() => {
-                    const item = { label: 'クラシック・ソロ', value: 3 };
+                    const item = {label: 'クラシック・ソロ', value: 3};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -378,7 +350,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_jazz"
                   checked={selectedMusicCategories.some((i) => i.value === 4)}
                   onChange={() => {
-                    const item = { label: 'ジャズ・ビッグバンド', value: 4 };
+                    const item = {label: 'ジャズ・ビッグバンド', value: 4};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -392,7 +364,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_brass_band"
                   checked={selectedMusicCategories.some((i) => i.value === 5)}
                   onChange={() => {
-                    const item = { label: '吹奏楽・ブラスバンド', value: 5 };
+                    const item = {label: '吹奏楽・ブラスバンド', value: 5};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -406,7 +378,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_piano"
                   checked={selectedMusicCategories.some((i) => i.value === 6)}
                   onChange={() => {
-                    const item = { label: 'ピアノ', value: 6 };
+                    const item = {label: 'ピアノ', value: 6};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -420,7 +392,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_japanese"
                   checked={selectedMusicCategories.some((i) => i.value === 7)}
                   onChange={() => {
-                    const item = { label: '邦楽・和楽器', value: 7 };
+                    const item = {label: '邦楽・和楽器', value: 7};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -434,7 +406,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_pops"
                   checked={selectedMusicCategories.some((i) => i.value === 8)}
                   onChange={() => {
-                    const item = { label: 'ポピュラー・軽音楽', value: 8 };
+                    const item = {label: 'ポピュラー・軽音楽', value: 8};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -447,7 +419,7 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
                   name="fav_other"
                   checked={selectedMusicCategories.some((i) => i.value === 9)} // IDを指定
                   onChange={() => {
-                    const item = { label: 'その他', value: 9 };
+                    const item = {label: 'その他', value: 9};
                     const newList = toggleItemInList(selectedMusicCategories, item);
                     setSelectedMusicCategories(newList);
                     setData('music_category_ids', newList.map((i) => i.value));
@@ -582,17 +554,17 @@ const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
               キャンセル
             </AnchorButton>
             <Button
-            type='submit'
-            prefix=""
+              type='submit'
+              prefix=""
               size="default"
               suffix=""
               variant="primary"
               wide
               disabled={processing}
               className='h-[44px] bg-[var(--color-primary)] font-bold text-base/[1] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
-          >
-            確認
-          </Button>
+            >
+              確認
+            </Button>
           </div>
         </form>
       </main>

@@ -33,10 +33,13 @@ Route::middleware('auth')->group(function () {
   Route::post('/favorite', [BookmarkController::class, 'store'])->name('favorite.store');
 });
 
-Route::post('/register/store', [RegisterController::class, 'store'])->name('register.store');
-
 Route::get('/smarthr-test', function () {
   return Inertia::render('SmarthrTest');
 });
+
+// ユーザー登録（自作フォーム）
+// BreezeやJetstreamなどのauth.phpのregisterルートは使わない前提
+Route::get('/register', [RegisterController::class, 'create'])->name('user.register');
+Route::post('/register', [RegisterController::class, 'store'])->name('user.register.store');
 
 require __DIR__ . '/auth.php';
