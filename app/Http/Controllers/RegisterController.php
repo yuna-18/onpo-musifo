@@ -61,24 +61,46 @@ class RegisterController extends Controller
   public function create()
   {
     $areas = Area::select('id as value', 'name as label')->get();
-    $subareas = Subarea::select('id as value', 'name as label')->get();
     $musicCategories = MusicCategory::select('id as value', 'name as label')->get();
     $musicInstCategories = MusicInstCategory::select('id as value', 'name as label')->get();
-    $musicInsts = MusicInst::select('id as value', 'name as label')->get();
     $musicCategoryToInstCategoryMap = [];
 
+    // ラベルのため必要なデータのみ取得
+    $subareas = Subarea::select('id as value', 'name as label')->get();
+    $musicInsts = MusicInst::select('id as value', 'name as label')->get();
+
+    // 音楽カテゴリとガキカテゴリの中間テーブルのデータを取得
     $relationInstCategories = DB::table('music_categories_music_inst_categories')->get();
     foreach ($relationInstCategories as $rel) {
       $musicCategoryToInstCategoryMap[$rel->music_category_id][] = $rel->music_inst_category_id;
     }
 
+    // 楽器カテゴリと楽器名の紐付け
+    $instCategoryToInstruments = MusicInst::select('id', 'music_inst_category_id')
+    ->get()
+    ->groupBy('music_inst_category_id')
+    ->mapWithKeys(function ($items, $key) {
+        return [(string) $key => $items->pluck('id')->values()->toArray()];
+    });
+
+    // 都道府県と地域区分の紐付け
+    $areaToSubarea = Subarea::select('id', 'area_id')
+    ->get()
+    ->groupBy('area_id')
+    ->mapWithKeys(function ($items, $key) {
+        return [(string) $key => $items->pluck('id')->values()->toArray()];
+    });
+
     return Inertia::render('Auth/Register', [
       'areas' => $areas,
       'subareas' => $subareas,
+      'areaToSubarea' => $areaToSubarea,
       'musicCategories' => $musicCategories,
       'musicInstCategories' => $musicInstCategories,
       'musicInsts' => $musicInsts,
       'musicCategoryToInstCategoryMap' => $musicCategoryToInstCategoryMap,
+      'instCategoryToInstruments' => $instCategoryToInstruments,
+      // dd($subareas),
     ]);
   }
 }

@@ -4,9 +4,7 @@ import Header from '@/Components/Header';
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
 import {Input, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
-export default function Register ({authUser, areas, subareas, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap}) {
-  // console.log('props', {areas, subareas, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap});
-
+export default function Register ({authUser, areas, subareas, areaToSubarea, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap, instCategoryToInstruments}) {
   const theme = createTheme();
   const {data, setData, post, processing, errors, reset} = useForm({
     name: '',
@@ -20,43 +18,17 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
     music_inst_ids: [],
   });
   // note仮の連動マスターデータ（実際は Laravel から props で渡す想定）
-  // const musicCategoryToInstCategoryMap = {
-  //   1: [101, 102],       // アンサンブル・室内楽 → 弦楽器・金管楽器
-  //   2: [102, 103],       // クラシック(大編成) → 金管楽器・打楽器
-  //   3: [101],            // クラシック・ソロ → 弦楽器
-  //   4: [103],            // ジャズ・ビッグバンド → 打楽器
-  //   5: [102],            // 吹奏楽・ブラスバンド → 金管楽器
-  //   6: [104],            // ピアノ → 鍵盤楽器
-  //   7: [105],            // 邦楽・和楽器 → 和楽器
-  //   8: [101, 103],       // ポピュラー・軽音楽 → 弦楽器・打楽器
-  //   9: [106],            // その他 → その他カテゴリ
-  // };
 
-
-  const instCategoryToInstruments = {
-    101: [1001, 1002], // 弦楽器 → バイオリン、チェロ
-    102: [1003, 1004], // 金管楽器 → トランペット、ホルン
-    103: [1005, 1006], // 打楽器 → ドラム、ティンパニ
-    104: [1007],       // 鍵盤楽器 → ピアノ
-    105: [1008, 1009], // 和楽器 → 三味線、尺八
-    106: [1010],       // その他 → その他楽器
-  };
-  const areaToSubarea = {
-    101: [1001, 1002], // 弦楽器 → バイオリン、チェロ
-    102: [1003, 1004], // 金管楽器 → トランペット、ホルン
-    103: [1005, 1006], // 打楽器 → ドラム、ティンパニ
-    104: [1007],       // 鍵盤楽器 → ピアノ
-    105: [1008, 1009], // 和楽器 → 三味線、尺八
-    106: [1010],       // その他 → その他楽器
-  };
 
   // データベースから取得した地域データ
   const areaOptions = areas;
   const subareaOptions = subareas;
+  console.log('🧩 first few subareaOptions:', subareaOptions.slice(0, 5));
   // データベースから取得した音楽データ
   const musicCategoryOptions = musicCategories;
-  const instCategoryOptions = musicInstCategories;
-  const instOptions = musicInsts;
+  const musicInstCategoryOptions = musicInstCategories;
+  const musicInstOptions = musicInsts;
+
 
 
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
@@ -64,9 +36,10 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
 
   // MultiComboBoxで選んだ親アイテム
   const [selectedAreaItems, setSelectedAreaItems] = useState([]);
-  const [selectedInstCategoryItems, setSelectedInstCategoryItems] = useState([]);
+
+  const [selectedMusicInstCategoryItems, setSelectedMusicInstCategoryItems] = useState([]);
   // 表示されたCheckBoxの中で選ばれている子アイテム
-  const [selectedInstItems, setSelectedInstItems] = useState([]);
+  const [selectedMusicInstItems, setSelectedMusicInstItems] = useState([]);
   const [selectedSubareaItems, setSelectedSubareaItems] = useState([]);
   // 音楽カテゴリ状態保持
   const [selectedMusicCategories, setSelectedMusicCategories] = useState([]);
@@ -74,10 +47,21 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
   // note汎用関数
   // マルチコンボボックスで選んだ結果から、表示すべきチェックボックスを絞る処理
   const getFilteredChildOptions = (selectedParents, relationMap, childOptions) => {
+    console.log('🐛 subarea filter:');
+    console.log('selectedAreaItems:', selectedAreaItems);
+    // console.log('areaToSubarea:', areaToSubarea);
+    // console.log('subareaOptions:', subareaOptions);
+
     return childOptions.filter((child) => {
-      return selectedParents.some((parent) =>
-        relationMap[parent.value]?.includes(child.value)
-      );
+      return selectedParents.some((parent) => {
+        const parentId = String(parent.value);
+        const childId = Number(child.value); // ← ここ修正！
+        const childList = relationMap[parentId];
+
+        if (!Array.isArray(childList)) return false;
+        const matched = childList.includes(childId);
+        return matched;
+      });
     });
   };
 
@@ -91,22 +75,26 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
 
   // チェックボックス→マルチコンボボックスの連動処理
   // 音楽カテゴリ→楽器カテゴリの連動
-  const filteredInstCategoryOptions = musicInstCategories.filter((instCat) =>
+  const filteredMusicInstCategoryOptions = musicInstCategoryOptions.filter((instCat) =>
     selectedMusicCategories.some(
       (cat) => musicCategoryToInstCategoryMap[cat.value]?.includes(instCat.value)
     )
   );
 
-  const filteredInstrumentOptions = getFilteredChildOptions(
-    selectedInstCategoryItems,                // MultiComboBoxで選んだ楽器カテゴリ
-    instCategoryToInstruments,    // 楽器カテゴリ → 楽器名 の連携Map
-    instOptions                   // 全楽器一覧
-  );
+  // マルチコンボボックス→チェックボックスの処理　それぞれ設定
   const filteredSubareaOptions = getFilteredChildOptions(
-    selectedAreaItems,                // MultiComboBoxで選んだ都道府県
-    areaToSubarea,    // 都道府県 → 地域区分 の連携Map
-    subareaOptions                   // 地域区分一覧
+    selectedAreaItems,
+    areaToSubarea,
+    subareaOptions
   );
+  // console.log('📦 表示する地域区分:', filteredSubareaOptions);
+
+  const filteredMusicInstrumentOptions = getFilteredChildOptions(
+    selectedMusicInstCategoryItems,
+    instCategoryToInstruments,
+    musicInstOptions
+  );
+  // console.log('🎵 表示する楽器名:', filteredMusicInstrumentOptions);
 
 
 
@@ -149,7 +137,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
                 type='text'
                 required
                 onChange={(e) => setData('name', e.target.value)}
-                className=''
+                className='h-[32px]'
               />
             </FormControl>
             {/* フリガナ */}
@@ -172,7 +160,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
                 type='text'
                 required
                 onChange={(e) => setData('furigana', e.target.value)}
-                className=''
+                className='h-[32px]'
               />
             </FormControl>
             {/* メールアドレス */}
@@ -195,13 +183,13 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
                 type='email'
                 required
                 onChange={(e) => setData('email', e.target.value)}
-                className=''
+                className='h-[32px] w-1/2'
               />
             </FormControl>
             {/* パスワード */}
             <FormControl
               title="パスワード"
-              helpMessage="英数字それぞれ1文字以上・20文字以内で入力してください。"
+              helpMessage="8文字以上で入力してください。"
               exampleMessage=""
               errorMessages={''}
               supplementaryMessage=""
@@ -218,7 +206,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
                 type='password'
                 required
                 onChange={(e) => setData('password', e.target.value)}
-                className=''
+                className='h-[32px] w-1/2'
               />
             </FormControl>
             {/* 都道府県 MultiComboBox*/}
@@ -256,7 +244,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
               title="地域区分"
               errorMessages=""
               exampleMessage=""
-              helpMessage="地域に合わせた、より詳細な情報をお届けしやすくするために必要です。(複数選択可)"
+              helpMessage="地域に合わせた、より詳細な情報をお届けしやすくするために必要です。上の都道府県の入力欄に入力すると選択肢が表示されます。(複数選択可)"
               supplementaryMessage=""
               statusLabelProps={{
                 children: '任意',
@@ -291,7 +279,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
               exampleMessage=""
               helpMessage="検索・メルマガ配信のために利用します。(複数選択可)"
               supplementaryMessage=""
-              title="経験・興味のある音楽カテゴリ"
+              title="経験・興味のある音楽ジャンル"
               statusLabelProps={{
                 children: '任意',
                 type: 'grey'
@@ -476,7 +464,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
             <Fieldset
               errorMessages=""
               exampleMessage=""
-              helpMessage="おおまかな楽器の分類を選択してください。(複数選択可)"
+              helpMessage="楽器の分類を選択してください。上の音楽ジャンルの入力欄を入力すると選択肢が表示されます。(複数選択可)"
               supplementaryMessage=""
               title="経験・興味のある楽器カテゴリ"
               statusLabelProps={{
@@ -487,18 +475,18 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
             >
               <Stack>
                 <MultiComboBox
-                  items={filteredInstCategoryOptions}
-                  selectedItems={selectedInstCategoryItems}
+                  items={filteredMusicInstCategoryOptions}
+                  selectedItems={selectedMusicInstCategoryItems}
                   onSelect={(item) => {
                     if (!item?.value) return;
-                    const newSelected = [...selectedInstCategoryItems, item];
-                    setSelectedInstCategoryItems(newSelected);
+                    const newSelected = [...selectedMusicInstCategoryItems, item];
+                    setSelectedMusicInstCategoryItems(newSelected);
                     setData('music_inst_category_ids', newSelected.map((item) => item.value));
                   }}
                   onDelete={(targetItem) => {
                     if (!targetItem?.value) return;
-                    const newSelected = selectedInstCategoryItems.filter((item) => item.value !== targetItem.value);
-                    setSelectedInstCategoryItems(newSelected);
+                    const newSelected = selectedMusicInstCategoryItems.filter((item) => item.value !== targetItem.value);
+                    setSelectedMusicInstCategoryItems(newSelected);
                     setData('music_inst_category_ids', newSelected.map((item) => item.value));
                   }}
                 />
@@ -508,7 +496,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
             <Fieldset
               errorMessages=""
               exampleMessage=""
-              helpMessage="楽器の中でも細かな分類を選択してください。(複数選択可)"
+              helpMessage="楽器名を選択してください。上の楽器カテゴリ入力欄で選択した内容に応じて表示されます。(複数選択可)"
               supplementaryMessage=""
               title="経験・興味のある楽器名"
               statusLabelProps={{
@@ -522,15 +510,15 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
                   column: 1.25,
                   row: 0.5
                 }}>
-                {filteredInstrumentOptions.map((inst) => (
+                {filteredMusicInstrumentOptions.map((inst) => (
                   <CheckBox
                     key={inst.value}
                     id={`inst_${inst.value}`}
                     name={`inst_${inst.value}`}
-                    checked={selectedInstItems.some((i) => i.value === inst.value)}
+                    checked={selectedMusicInstItems.some((i) => i.value === inst.value)}
                     onChange={() => {
-                      const newList = toggleItemInList(selectedInstItems, inst);
-                      setSelectedInstItems(newList);
+                      const newList = toggleItemInList(selectedMusicInstItems, inst);
+                      setSelectedMusicInstItems(newList);
                       setData('music_inst_ids', newList.map((i) => i.value));
                     }}
                   >
