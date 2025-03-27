@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Area;
 use App\Models\Subarea;
 use App\Models\MusicCategory;
@@ -64,6 +65,12 @@ class RegisterController extends Controller
     $musicCategories = MusicCategory::select('id as value', 'name as label')->get();
     $musicInstCategories = MusicInstCategory::select('id as value', 'name as label')->get();
     $musicInsts = MusicInst::select('id as value', 'name as label')->get();
+    $musicCategoryToInstCategoryMap = [];
+
+    $relationInstCategories = DB::table('music_categories_music_inst_categories')->get();
+    foreach ($relationInstCategories as $rel) {
+      $musicCategoryToInstCategoryMap[$rel->music_category_id][] = $rel->music_inst_category_id;
+    }
 
     return Inertia::render('Auth/Register', [
       'areas' => $areas,
@@ -71,6 +78,7 @@ class RegisterController extends Controller
       'musicCategories' => $musicCategories,
       'musicInstCategories' => $musicInstCategories,
       'musicInsts' => $musicInsts,
+      'musicCategoryToInstCategoryMap' => $musicCategoryToInstCategoryMap,
     ]);
   }
 }

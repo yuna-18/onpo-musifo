@@ -4,9 +4,8 @@ import Header from '@/Components/Header';
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
 import {Input, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
-export default function Register ({authUser, areas, subareas, musicCategories, musicInstCategories, musicInsts}) {
-  console.log('props', {areas, subareas, musicCategories, musicInstCategories, musicInsts});
-
+export default function Register ({authUser, areas, subareas, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap}) {
+  // console.log('props', {areas, subareas, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap});
 
   const theme = createTheme();
   const {data, setData, post, processing, errors, reset} = useForm({
@@ -21,17 +20,17 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
     music_inst_ids: [],
   });
   // note仮の連動マスターデータ（実際は Laravel から props で渡す想定）
-  const musicCategoryToInstCategoryMap = {
-    1: [101, 102],       // アンサンブル・室内楽 → 弦楽器・金管楽器
-    2: [102, 103],       // クラシック(大編成) → 金管楽器・打楽器
-    3: [101],            // クラシック・ソロ → 弦楽器
-    4: [103],            // ジャズ・ビッグバンド → 打楽器
-    5: [102],            // 吹奏楽・ブラスバンド → 金管楽器
-    6: [104],            // ピアノ → 鍵盤楽器
-    7: [105],            // 邦楽・和楽器 → 和楽器
-    8: [101, 103],       // ポピュラー・軽音楽 → 弦楽器・打楽器
-    9: [106],            // その他 → その他カテゴリ
-  };
+  // const musicCategoryToInstCategoryMap = {
+  //   1: [101, 102],       // アンサンブル・室内楽 → 弦楽器・金管楽器
+  //   2: [102, 103],       // クラシック(大編成) → 金管楽器・打楽器
+  //   3: [101],            // クラシック・ソロ → 弦楽器
+  //   4: [103],            // ジャズ・ビッグバンド → 打楽器
+  //   5: [102],            // 吹奏楽・ブラスバンド → 金管楽器
+  //   6: [104],            // ピアノ → 鍵盤楽器
+  //   7: [105],            // 邦楽・和楽器 → 和楽器
+  //   8: [101, 103],       // ポピュラー・軽音楽 → 弦楽器・打楽器
+  //   9: [106],            // その他 → その他カテゴリ
+  // };
 
 
   const instCategoryToInstruments = {
@@ -92,7 +91,7 @@ export default function Register ({authUser, areas, subareas, musicCategories, m
 
   // チェックボックス→マルチコンボボックスの連動処理
   // 音楽カテゴリ→楽器カテゴリの連動
-  const filteredInstCategoryOptions = instCategoryOptions.filter((instCat) =>
+  const filteredInstCategoryOptions = musicInstCategories.filter((instCat) =>
     selectedMusicCategories.some(
       (cat) => musicCategoryToInstCategoryMap[cat.value]?.includes(instCat.value)
     )
