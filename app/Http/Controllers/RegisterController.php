@@ -16,90 +16,89 @@ use App\Models\MusicInst;
 
 class RegisterController extends Controller
 {
-  public function store(Request $request)
-  {
-    // バリデーション
-    $validated = $request->validate([
-      'name' => 'required|string|max:255',
-      'furigana' => 'required|string|max:255',
-      'email' => 'required|email|unique:users,email',
-      'password' => 'required|string|min:8',
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'furigana' => ['required', 'string', 'max:255', 'regex:/^[ァ-ヶー\s　]+$/u'], // カタカナと全角スペース
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
 
-      // 任意の項目&中の値は整数限定
-      'area_ids' => 'nullable|array',
-      'area_ids.*' => 'integer|exists:areas,id',
-      'subarea_ids' => 'nullable|array',
-      'subarea_ids.*' => 'integer|exists:subareas,id',
-      'music_category_ids' => 'nullable|array',
-      'music_category_ids.*' => 'integer|exists:music_categories,id',
-      'music_inst_category_ids' => 'nullable|array',
-      'music_inst_category_ids.*' => 'integer|exists:music_inst_categories,id',
-      'music_inst_ids' => 'nullable|array',
-      'music_inst_ids.*' => 'integer|exists:music_insts,id',
-    ]);
+            'area_ids' => 'nullable|array',
+            'area_ids.*' => 'integer|exists:areas,id',
+            'subarea_ids' => 'nullable|array',
+            'subarea_ids.*' => 'integer|exists:subareas,id',
+            'music_category_ids' => 'nullable|array',
+            'music_category_ids.*' => 'integer|exists:music_categories,id',
+            'music_inst_category_ids' => 'nullable|array',
+            'music_inst_category_ids.*' => 'integer|exists:music_inst_categories,id',
+            'music_inst_ids' => 'nullable|array',
+            'music_inst_ids.*' => 'integer|exists:music_insts,id',
+        ]);
 
-    // ユーザー作成
-    $user = User::create([
-      'name' => $validated['name'],
-      'furigana' => $validated['furigana'],
-      'email' => $validated['email'],
-      'password' => Hash::make($validated['password']),
-    ]);
+        $user = User::create([
+            'name' => $validated['name'],
+            'furigana' => $validated['furigana'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
 
-    // 中間テーブルに関連データを保存
-    $user->areas()->attach($validated['area_ids'] ?? []);
-    $user->subareas()->attach($validated['subarea_ids'] ?? []);
-    $user->musicCategories()->attach($validated['music_category_ids'] ?? []);
-    $user->musicInstCategories()->attach($validated['music_inst_category_ids'] ?? []);
-    $user->musicInsts()->attach($validated['music_inst_ids'] ?? []);
+        $now = now();
 
-    // ログインさせる場合（任意）
-    Auth::login($user);
-    return redirect()->route('top')->with('message', 'ユーザー登録が完了しました！トップ画面へ移ります。');
-  }
+        $user->areas()->attach(
+            collect($validated['area_ids'] ?? [])->mapWithKeys(fn($id) => [$id => ['created_at' => $now, 'updated_at' => $now]])->toArray()
+        );
+        $user->subareas()->attach(
+            collect($validated['subarea_ids'] ?? [])->mapWithKeys(fn($id) => [$id => ['created_at' => $now, 'updated_at' => $now]])->toArray()
+        );
+        $user->musicCategories()->attach(
+            collect($validated['music_category_ids'] ?? [])->mapWithKeys(fn($id) => [$id => ['created_at' => $now, 'updated_at' => $now]])->toArray()
+        );
+        $user->musicInstCategories()->attach(
+            collect($validated['music_inst_category_ids'] ?? [])->mapWithKeys(fn($id) => [$id => ['created_at' => $now, 'updated_at' => $now]])->toArray()
+        );
+        $user->musicInsts()->attach(
+            collect($validated['music_inst_ids'] ?? [])->mapWithKeys(fn($id) => [$id => ['created_at' => $now, 'updated_at' => $now]])->toArray()
+        );
 
-  public function create()
-  {
-    $areas = Area::select('id as value', 'name as label')->get();
-    $musicCategories = MusicCategory::select('id as value', 'name as label')->get();
-    $musicInstCategories = MusicInstCategory::select('id as value', 'name as label')->get();
-    $musicCategoryToInstCategoryMap = [];
-
-    // ラベルのため必要なデータのみ取得
-    $subareas = Subarea::select('id as value', 'name as label')->get();
-    $musicInsts = MusicInst::select('id as value', 'name as label')->get();
-
-    // 音楽カテゴリとガキカテゴリの中間テーブルのデータを取得
-    $relationInstCategories = DB::table('music_categories_music_inst_categories')->get();
-    foreach ($relationInstCategories as $rel) {
-      $musicCategoryToInstCategoryMap[$rel->music_category_id][] = $rel->music_inst_category_id;
+        Auth::login($user);
+        return redirect()->route('top')->with('message', 'ユーザー登録が完了しました！トップ画面へ移ります。');
     }
 
-    // 楽器カテゴリと楽器名の紐付け
-    $instCategoryToInstruments = MusicInst::select('id', 'music_inst_category_id')
-    ->get()
-    ->groupBy('music_inst_category_id')
-    ->mapWithKeys(function ($items, $key) {
-        return [(string) $key => $items->pluck('id')->values()->toArray()];
-    });
+    public function create()
+    {
+        $areas = Area::select('id as value', 'name as label')->get();
+        $musicCategories = MusicCategory::select('id as value', 'name as label')->get();
+        $musicInstCategories = MusicInstCategory::select('id as value', 'name as label')->get();
+        $musicCategoryToInstCategoryMap = [];
 
-    // 都道府県と地域区分の紐付け
-    $areaToSubarea = Subarea::select('id', 'area_id')
-    ->get()
-    ->groupBy('area_id')
-    ->mapWithKeys(function ($items, $key) {
-        return [(string) $key => $items->pluck('id')->values()->toArray()];
-    });
+        $subareas = Subarea::select('id as value', 'name as label')->get();
+        $musicInsts = MusicInst::select('id as value', 'name as label')->get();
 
-    return Inertia::render('Auth/Register', [
-      'areas' => $areas,
-      'subareas' => $subareas,
-      'areaToSubarea' => $areaToSubarea,
-      'musicCategories' => $musicCategories,
-      'musicInstCategories' => $musicInstCategories,
-      'musicInsts' => $musicInsts,
-      'musicCategoryToInstCategoryMap' => $musicCategoryToInstCategoryMap,
-      'instCategoryToInstruments' => $instCategoryToInstruments,
-    ]);
-  }
+        $relationInstCategories = DB::table('music_categories_music_inst_categories')->get();
+        foreach ($relationInstCategories as $rel) {
+            $musicCategoryToInstCategoryMap[$rel->music_category_id][] = $rel->music_inst_category_id;
+        }
+
+        $instCategoryToInstruments = MusicInst::select('id', 'music_inst_category_id')
+            ->get()
+            ->groupBy('music_inst_category_id')
+            ->mapWithKeys(fn($items, $key) => [(string) $key => $items->pluck('id')->values()->toArray()]);
+
+        $areaToSubarea = Subarea::select('id', 'area_id')
+            ->get()
+            ->groupBy('area_id')
+            ->mapWithKeys(fn($items, $key) => [(string) $key => $items->pluck('id')->values()->toArray()]);
+
+        return Inertia::render('Auth/Register', [
+            'areas' => $areas,
+            'subareas' => $subareas,
+            'areaToSubarea' => $areaToSubarea,
+            'musicCategories' => $musicCategories,
+            'musicInstCategories' => $musicInstCategories,
+            'musicInsts' => $musicInsts,
+            'musicCategoryToInstCategoryMap' => $musicCategoryToInstCategoryMap,
+            'instCategoryToInstruments' => $instCategoryToInstruments,
+        ]);
+    }
 }
