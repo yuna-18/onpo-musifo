@@ -23,7 +23,7 @@ export default function Login ({status, canResetPassword}) {
       onFinish: () => reset('password'),
     });
   };
-  
+
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
 
 
@@ -43,21 +43,6 @@ export default function Login ({status, canResetPassword}) {
 
         <form onSubmit={submit} className='w-[320px] md:w-[368px] mt-8 mx-auto'>
           {/* todo フォームの大きさ・フォントサイズ設定 */}
-          {/* <div>
-          <InputLabel htmlFor="email" value="Email" />
-
-          <TextInput
-            id="email"
-            type="email"
-            name="email"
-            value={data.email}
-            className="mt-1 block w-full"
-            autoComplete="username"
-            isFocused={true}
-            onChange={(e) => setData('email', e.target.value)}
-          />
-          <InputError message={errors.email} className="mt-2" />
-        </div> */}
           {/* メールアドレス */}
           <FormControl
             title="メールアドレス"
@@ -76,7 +61,7 @@ export default function Login ({status, canResetPassword}) {
               type='email'
               required
               onChange={(e) => setData('email', e.target.value)}
-              className='w-full'
+              className='w-full h-[32px]'
             />
           </FormControl>
 
@@ -98,11 +83,11 @@ export default function Login ({status, canResetPassword}) {
               type='password'
               required
               onChange={(e) => setData('password', e.target.value)}
-              className='w-full'
+              className='w-full h-[32px]'
             />
           </FormControl>
           {/* ログイン状態を保存する */}
-          <div className="mt-4 block">
+          {/* <div className="mt-4 block">
             <label className="flex items-center">
               <Checkbox
                 name="remember"
@@ -115,7 +100,7 @@ export default function Login ({status, canResetPassword}) {
                 ログイン状態を保存する
               </span>
             </label>
-          </div>
+          </div> */}
 
           {/* ボタンエリア */}
           <div className='flex flex-col mx-auto md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-10 mt-16'>
@@ -144,7 +129,7 @@ export default function Login ({status, canResetPassword}) {
             </Button>
           </div>
           {/* パスワード再設定 */}
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             {canResetPassword && (
               <Link
                 href={route('password.request')}
@@ -153,11 +138,7 @@ export default function Login ({status, canResetPassword}) {
                 パスワードの再設定
               </Link>
             )}
-
-            {/* <PrimaryButton className="ms-4" disabled={processing}>
-              ログイン
-            </PrimaryButton> */}
-          </div>
+          </div> */}
         </form>
       </Center>
     </>
