@@ -22,5 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     progress: {
       color: '#4B5563',
     },
+    base: import.meta.env.PROD ? '/otosukui' : '/',
   })
 })
