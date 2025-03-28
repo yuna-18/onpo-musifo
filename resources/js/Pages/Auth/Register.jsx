@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Head, Link, useForm, router} from '@inertiajs/react';
 import {Inertia} from '@inertiajs/inertia';
 import Header from '@/Components/Header';
@@ -23,13 +23,10 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
   // データベースから取得した地域データ
   const areaOptions = areas;
   const subareaOptions = subareas;
-  // console.log('🧩 first few subareaOptions:', subareaOptions.slice(0, 5));
   // データベースから取得した音楽データ
   const musicCategoryOptions = musicCategories;
   const musicInstCategoryOptions = musicInstCategories;
   const musicInstOptions = musicInsts;
-
-
 
   const topPagePath = import.meta.env.VITE_HOME_PATH || '/';
   const isLoggedIn = Boolean(authUser);
@@ -43,15 +40,50 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
   const [selectedSubareaItems, setSelectedSubareaItems] = useState([]);
   // 音楽カテゴリ状態保持
   const [selectedMusicCategories, setSelectedMusicCategories] = useState([]);
+  
+  useEffect(() => {
+    const initSelectedItems = (ids = [], options = []) => {
+      const normalizedIds = ids.map((id) => Number(id));
+      return options.filter((opt) => normalizedIds.includes(Number(opt.value)));
+    };
+  
+    if (formData.area_ids?.length > 0) {
+      const selected = initSelectedItems(formData.area_ids, areaOptions);
+      setSelectedAreaItems(selected);
+      console.log('✅ AreaItems:', selected);
+    }
+  
+    if (formData.subarea_ids?.length > 0) {
+      const selected = initSelectedItems(formData.subarea_ids, subareaOptions);
+      setSelectedSubareaItems(selected);
+    }
+  
+    if (formData.music_category_ids?.length > 0) {
+      const selected = initSelectedItems(formData.music_category_ids, musicCategoryOptions);
+      setSelectedMusicCategories(selected);
+    }
+  
+    if (formData.music_inst_category_ids?.length > 0) {
+      const selected = initSelectedItems(formData.music_inst_category_ids, musicInstCategoryOptions);
+      setSelectedMusicInstCategoryItems(selected);
+    }
+  
+    if (formData.music_inst_ids?.length > 0) {
+      const selected = initSelectedItems(formData.music_inst_ids, musicInstOptions);
+      setSelectedMusicInstItems(selected);
+    }
+  }, [
+    formData,
+    areaOptions,
+    subareaOptions,
+    musicCategoryOptions,
+    musicInstCategoryOptions,
+    musicInstOptions
+  ]);
 
   // note汎用関数
   // マルチコンボボックスで選んだ結果から、表示すべきチェックボックスを絞る処理
   const getFilteredChildOptions = (selectedParents, relationMap, childOptions) => {
-    // console.log('🐛 subarea filter:');
-    // console.log('selectedAreaItems:', selectedAreaItems);
-    // console.log('areaToSubarea:', areaToSubarea);
-    // console.log('subareaOptions:', subareaOptions);
-
     return childOptions.filter((child) => {
       return selectedParents.some((parent) => {
         const parentId = String(parent.value);
@@ -87,15 +119,13 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
     areaToSubarea,
     subareaOptions
   );
-  // console.log('📦 表示する地域区分:', filteredSubareaOptions);
 
   const filteredMusicInstrumentOptions = getFilteredChildOptions(
     selectedMusicInstCategoryItems,
     instCategoryToInstruments,
     musicInstOptions
   );
-  // console.log('🎵 表示する楽器名:', filteredMusicInstrumentOptions);
-
+  
   const confirm = (e) => {
     e.preventDefault();
     console.log("✅ confirm発火");
@@ -124,13 +154,13 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
         {/* optimize エラーが出た時にカーソルを入力欄に合わせる */}
         <form onSubmit={confirm}>
           <Stack className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 mx-auto gap-y-2'
-          // onKeyDown={(e) => {
-          //   if (e.key === 'Enter') {
-          //     e.preventDefault();
-          //     confirm();
-          //   }
-          // }
-          // }
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              confirm();
+            }
+          }
+          }
           >
             {/* todo 入力フォーム・フォントのサイズ・間隔設定 */}
             {/* 氏名 */}
