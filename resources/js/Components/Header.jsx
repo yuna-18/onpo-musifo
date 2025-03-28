@@ -17,7 +17,7 @@ const Header = ({authUser}) => {
     <header className="fixed w-[100vw] z-50 bg-[var(--color-primary)] text-[var(--color-white)]">
       <nav className="flex justify-between p-4 pt-12 md:p-8 items-center">
         <Link
-          href="{route('top')}"
+          href={route('top')}
           className="font-bold text-2xl/[1.5] hover:opacity-90"
         >
           音すくい

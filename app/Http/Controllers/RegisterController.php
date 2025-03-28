@@ -34,6 +34,13 @@ class RegisterController extends Controller
       'music_inst_category_ids.*' => 'integer|exists:music_inst_categories,id',
       'music_inst_ids' => 'nullable|array',
       'music_inst_ids.*' => 'integer|exists:music_insts,id',
+    ], [
+      'required' => '必須項目です。',
+      'name.regex' => 'スペースなしで入力してください。',
+      'furigana.regex' => 'カタカナ（スペースなし）で入力してください。',
+      'email' => 'メールアドレスの形式で入力してください。',
+      'email.unique' => 'このメールアドレスは既に登録されています。',
+      'password.min' => 'パスワードは8文字以上で入力してください。',
     ]);
 
     $user = User::create([

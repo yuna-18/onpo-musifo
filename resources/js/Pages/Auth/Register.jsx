@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {Head, Link, useForm} from '@inertiajs/react';
 import Header from '@/Components/Header';
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
@@ -17,9 +17,6 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
     music_inst_category_ids: [],
     music_inst_ids: [],
   });
-  // note仮の連動マスターデータ（実際は Laravel から props で渡す想定）
-
-
   // データベースから取得した地域データ
   const areaOptions = areas;
   const subareaOptions = subareas;
@@ -99,11 +96,21 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
 
 
   const submit = (e) => {
-    e.preventDefault();
-    post(route('user.register'), {
+    e.preventDefault()
+    console.log('✅ submit 発火')
+  
+    post('/register', {
       data,
-    });
-  };
+      onError: (errors) => {
+        console.log('🚨 onError', errors)
+      },
+      onSuccess: () => {
+        console.log('✅ 登録成功')
+      },
+    })
+  }
+  
+  
 
 
   return (
@@ -120,6 +127,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             <FormControl
               autoBindErrorInput
               title="氏名"
+              htmlFor='name'
               helpMessage="スペースなしで入力してください"
               exampleMessage="山田太郎"
               errorMessages={errors.name ? [errors.name] : []}
@@ -145,7 +153,8 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             <FormControl
               autoBindErrorInput
               title="フリガナ"
-              helpMessage="カタカナ&スペースなしで入力してください。"
+              htmlFor='furigana'
+              helpMessage="カタカナ（スペースなし）で入力してください。"
               exampleMessage="ヤマダタロウ"
               errorMessages={errors.furigana ? [errors.furigana] : []}
               supplementaryMessage=""
@@ -158,7 +167,6 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
                 id="furigana"
                 name="furigana"
                 value={data.furigana}
-                autoComplete="furigana"
                 type='text'
                 required
                 onChange={(e) => setData('furigana', e.target.value)}
@@ -169,6 +177,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             <FormControl
               autoBindErrorInput
               title="メールアドレス"
+              htmlFor='email'
               helpMessage=""
               exampleMessage=""
               errorMessages={errors.email ? [errors.email] : []}
@@ -193,6 +202,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             <FormControl
               autoBindErrorInput
               title="パスワード"
+              htmlFor='password'
               helpMessage="8文字以上で入力してください。"
               exampleMessage=""
               errorMessages={errors.password ? [errors.password] : []}
@@ -206,7 +216,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
                 id="password"
                 name="password"
                 value={data.password}
-                autoComplete="password"
+                autoComplete="new-password"
                 type='password'
                 required
                 onChange={(e) => setData('password', e.target.value)}
@@ -216,9 +226,9 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             {/* 都道府県 MultiComboBox*/}
             <FormControl
               title="都道府県"
+              htmlFor='area'
               helpMessage="地域に合わせた情報をお届けしやすくするために必要です。(複数選択可)"
               exampleMessage=""
-              errorMessages={errors.name ? [errors.name] : []}
               supplementaryMessage="この項目を選択すると、地域区分の選択肢が表示されます。"
               statusLabelProps={{
                 children: '任意',
@@ -227,6 +237,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             >
               <MultiComboBox
                 items={areaOptions}
+                name='area'
                 // 選択済みアイテムの例（中身は実際のデータに応じて変更）
                 selectedItems={selectedAreaItems}
                 onSelect={(item) => {
@@ -323,10 +334,10 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
               }}
             >
               <CheckBox
-                id="japanese"
-                name="japanese"
-                value={data.japanese}
-                onChange={(e) => setData('japanese', e.target.value)}
+                id="newsletter_opt_in"
+                name="newsletter_opt_in"
+                value={data.newsletter_opt_in}
+                onChange={(e) => setData('newsletter_opt_in', e.target.value)}
                 className=''
               >
                 受け取る
@@ -368,6 +379,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
               <Stack>
                 <MultiComboBox
                   items={filteredMusicInstCategoryOptions}
+                  name='music_inst_category'
                   selectedItems={selectedMusicInstCategoryItems}
                   onSelect={(item) => {
                     if (!item?.value) return;
@@ -432,7 +444,9 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
               キャンセル
             </AnchorButton>
             <Button
-              type='submit'
+              // type='submit'
+              type='button'
+              onClick={submit}
               prefix=""
               size="default"
               suffix=""
