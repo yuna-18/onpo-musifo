@@ -23,8 +23,8 @@ class RegisterController extends Controller
       'furigana' => ['required', 'string', 'max:255', 'regex:/^[ァ-ヶー]+$/u'], // カタカナのみ（スペースなし）
       'email' => 'required|email|unique:users,email',
       'password' => 'required|string|min:8',
-      'newsletter_opt_in' => 'nullable|boolean',
-      'email_notify_opt_in' => 'nullable|boolean',
+      'newsletter_opt_in' => 'nullable|in:0,1',
+      'email_notify_opt_in' => 'nullable|in:0,1',
       'area_ids' => 'nullable|array',
       'area_ids.*' => 'integer|exists:areas,id',
       'subarea_ids' => 'nullable|array',
@@ -49,8 +49,9 @@ class RegisterController extends Controller
       'furigana' => $validated['furigana'],
       'email' => $validated['email'],
       'password' => Hash::make($validated['password']),
-      'newsletter_opt_in' => $validated['newsletter_opt_in'] ?? 0,
-      'email_notify_opt_in' => $validated['email_notify_opt_in'] ?? 0,
+      // 保存時
+      'newsletter_opt_in' => (int) $request->input('newsletter_opt_in', 0),
+      'email_notify_opt_in' => (int) $request->input('email_notify_opt_in', 0),
     ]);
 
     $now = now();
@@ -75,8 +76,9 @@ class RegisterController extends Controller
     return redirect()->route('top')->with('message', 'ユーザー登録が完了しました！トップ画面へ移ります。');
   }
 
-  public function create()
+  public function create(Request $request)
   {
+    $formData = $request->all();
     $areas = Area::select('id as value', 'name as label')->get();
     $musicCategories = MusicCategory::select('id as value', 'name as label')->get();
     $musicInstCategories = MusicInstCategory::select('id as value', 'name as label')->get();
@@ -109,18 +111,20 @@ class RegisterController extends Controller
       'musicInsts' => $musicInsts,
       'musicCategoryToInstCategoryMap' => $musicCategoryToInstCategoryMap,
       'instCategoryToInstruments' => $instCategoryToInstruments,
+      'formData' => $formData,
     ]);
   }
-  
+
   public function confirm(Request $request)
   {
     $validated = $request->validate([
       'name' => ['required', 'string', 'max:255', 'regex:/^[^\s　]+$/u'], // スペース禁止
       'furigana' => ['required', 'string', 'max:255', 'regex:/^[ァ-ヶー]+$/u'], // カタカナのみ（スペースなし）
-      'email' => 'required|email|unique:users,email',
+      'email' => 'required|email',
       'password' => 'required|string|min:8',
-      'newsletter_opt_in' => 'nullable|boolean',
-      'email_notify_opt_in' => 'nullable|boolean',
+      // バリデーション
+      'newsletter_opt_in' => 'nullable|in:0,1',
+      'email_notify_opt_in' => 'nullable|in:0,1',
       'area_ids' => 'nullable|array',
       'subarea_ids' => 'nullable|array',
       'music_category_ids' => 'nullable|array',
@@ -134,13 +138,13 @@ class RegisterController extends Controller
       'email.unique' => 'このメールアドレスは既に登録されています。',
       'password.min' => 'パスワードは8文字以上で入力してください。',
     ]);
-    
+
     $areaLabels = Area::whereIn('id', $request->input('area_ids', []))->pluck('name')->toArray();
     $subareaLabels = Subarea::whereIn('id', $request->input('subarea_ids', []))->pluck('name')->toArray();
     $musicCategoryLabels = MusicCategory::whereIn('id', $request->input('music_category_ids', []))->pluck('name')->toArray();
     $musicInstCategoryLabels = MusicInstCategory::whereIn('id', $request->input('music_inst_category_ids', []))->pluck('name')->toArray();
     $musicInstLabels = MusicInst::whereIn('id', $request->input('music_inst_ids', []))->pluck('name')->toArray();
-    
+
     return Inertia::render('Auth/RegisterConfirm', [
       'canRegister' => $validated,
       'areaLabels' => $areaLabels,

@@ -1,24 +1,24 @@
 import React, {useState, useCallback} from 'react';
 import {Head, Link, useForm, router} from '@inertiajs/react';
-// import { Inertia } from '@inertiajs/inertia';
+import {Inertia} from '@inertiajs/inertia';
 import Header from '@/Components/Header';
 import {createTheme, ThemeProvider, FormControl, Fieldset, Cluster, Stack, Center} from 'smarthr-ui';
 import {Input, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
-export default function Register ({authUser, areas, subareas, areaToSubarea, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap, instCategoryToInstruments}) {
+export default function Register ({authUser, areas, subareas, areaToSubarea, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap, instCategoryToInstruments, formData = {}}) {
   const theme = createTheme();
-  const {data, setData, post, processing, errors, reset} = useForm({
-    name: '',
-    furigana: '',
-    email: '',
-    password: '',
-    area_ids: [],
-    subarea_ids: [],
-    music_category_ids: [],
-    newsletter_opt_in: 0,
-    email_notify_opt_in: 0,
-    music_inst_category_ids: [],
-    music_inst_ids: [],
+  const { data, setData, post, processing, errors, reset } = useForm({
+    name: formData.name ?? '',
+    furigana: formData.furigana ?? '',
+    email: formData.email ?? '',
+    password: formData.password ?? '',
+    area_ids: formData.area_ids ?? [],
+    subarea_ids: formData.subarea_ids ?? [],
+    music_category_ids: formData.music_category_ids ?? [],
+    newsletter_opt_in: formData.newsletter_opt_in ?? 0,
+    email_notify_opt_in: formData.email_notify_opt_in ?? 0,
+    music_inst_category_ids: formData.music_inst_category_ids ?? [],
+    music_inst_ids: formData.music_inst_ids ?? [],
   });
   // データベースから取得した地域データ
   const areaOptions = areas;
@@ -96,20 +96,19 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
   );
   // console.log('🎵 表示する楽器名:', filteredMusicInstrumentOptions);
 
-
-
-
   const confirm = (e) => {
     e.preventDefault();
-  console.log("confirm!!")
+    console.log("✅ confirm発火");
+  
     post(route('user.register.confirm'), {
-      ...data,
-      areas,
-      subareas,
-      musicCategories,
-      musicInstCategories,
-      musicInsts,
       preserveState: true,
+      preserveScroll: true,
+      onError: (errors) => {
+        console.log('🚨 バリデーションエラー:', errors);
+      },
+      onSuccess: () => {
+        console.log('✅ 確認画面へ遷移');
+      },
     });
   };
 
