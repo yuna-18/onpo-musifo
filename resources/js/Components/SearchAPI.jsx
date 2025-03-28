@@ -1,20 +1,34 @@
-// SearchAPI.jsx
 import { useEffect } from 'react'
-import { usePage } from '@inertiajs/react'
+import { switchToConcertTab } from '@/utils/switchToConcertTab'
 
 const GoogleCSE = () => {
   useEffect(() => {
-    const isTopPage = () => {
-      const path = window.location.pathname.replace(/\/$/, '')
-      return path === '' || path === '/otosukui'
-    }
-
     const container = document.getElementById('google-cse-container')
-    if (!container || !isTopPage()) return
+    if (!container) return
 
-    // 検索コンテナの中を毎回クリア（無限増殖防止）
     container.innerHTML = ''
     container.style.display = 'block'
+
+    let observer = null
+
+    const waitForGscResults = () => {
+      const interval = setInterval(() => {
+        const target = document.querySelector('.gsc-results')
+        if (target) {
+          clearInterval(interval)
+
+          // ✅ 初期のタブをチェック（検索結果前でも動作する）
+          switchToConcertTab()
+
+          // ✅ 検索結果が表示された後にも再チェック
+          observer = new MutationObserver(() => {
+            switchToConcertTab()
+          })
+
+          observer.observe(target, { childList: true, subtree: true })
+        }
+      }, 300)
+    }
 
     const render = () => {
       if (window.google?.search?.cse?.element) {
@@ -22,10 +36,11 @@ const GoogleCSE = () => {
           div: 'google-cse-container',
           tag: 'searchresults-only',
         })
+
+        waitForGscResults()
       }
     }
 
-    // 初回読み込み
     if (!window.__gcse) {
       window.__gcse = {
         parsetags: 'explicit',
@@ -39,12 +54,12 @@ const GoogleCSE = () => {
       render()
     }
 
-    // ✅ ページ遷移時に検索コンテナを非表示＆中身をリセット
     return () => {
       if (container) {
         container.innerHTML = ''
         container.style.display = 'none'
       }
+      if (observer) observer.disconnect()
     }
   }, [])
 
