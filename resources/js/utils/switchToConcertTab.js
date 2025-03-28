@@ -3,7 +3,7 @@ export function switchToConcertTab () {
   const activeLabel = activeTab?.querySelector('span')?.textContent?.trim()
 
   if (activeLabel !== 'すべての検索結果') {
-    console.log(`🛑 アクティブタブは「${activeLabel}」なので切り替えなし`)
+    // console.log(`🛑 アクティブタブは「${activeLabel}」なので切り替えなし`)
     return
   }
 
@@ -12,7 +12,7 @@ export function switchToConcertTab () {
     const label = tab.querySelector('span')?.textContent?.trim()
     if (label === '演奏会') {
       tab.click()
-      console.log('✅ 「すべての検索結果」だったので「演奏会」タブに自動切替')
+      // console.log('✅ 「すべての検索結果」だったので「演奏会」タブに自動切替')
     }
   })
 }
