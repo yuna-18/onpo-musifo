@@ -1,36 +1,54 @@
-import React, { useEffect } from 'react';
+// SearchAPI.jsx
+import { useEffect } from 'react'
+import { usePage } from '@inertiajs/react'
 
 const GoogleCSE = () => {
   useEffect(() => {
-    const renderGoogleCSE = () => {
-      // 変更：ターゲットのコンテナIDを "google-cse-container" に変更
-      const container = document.getElementById("google-cse-container");
-      if (container && container.childElementCount === 0 &&
-          window.google && window.google.search && window.google.search.cse && window.google.search.cse.element) {
-        window.google.search.cse.element.render({
-          div: "google-cse-container", // ここも同様に変更
-          tag: 'searchresults-only'
-        });
-      } else if (!container || container.childElementCount === 0) {
-        // googleオブジェクトがまだ準備できていなければ再試行
-        setTimeout(renderGoogleCSE, 500);
-      }
-    };
-
-    if (!window.__gcse) {
-      // explicit モードに設定して、コールバックでレンダリング
-      window.__gcse = { parsetags: 'explicit', callback: renderGoogleCSE };
-      const script = document.createElement('script');
-      script.src = 'https://cse.google.com/cse.js?cx=349714df9516f4648';
-      script.async = true;
-      document.body.appendChild(script);
-    } else {
-      renderGoogleCSE();
+    const isTopPage = () => {
+      const path = window.location.pathname.replace(/\/$/, '')
+      return path === '' || path === '/otosukui'
     }
-  }, []);
 
-  // Inertia のコンテナとは別の場所に配置しているため、ここでは何もレンダリングしない
-  return null;
-};
+    const container = document.getElementById('google-cse-container')
+    if (!container || !isTopPage()) return
 
-export default GoogleCSE;
+    // 検索コンテナの中を毎回クリア（無限増殖防止）
+    container.innerHTML = ''
+    container.style.display = 'block'
+
+    const render = () => {
+      if (window.google?.search?.cse?.element) {
+        window.google.search.cse.element.render({
+          div: 'google-cse-container',
+          tag: 'searchresults-only',
+        })
+      }
+    }
+
+    // 初回読み込み
+    if (!window.__gcse) {
+      window.__gcse = {
+        parsetags: 'explicit',
+        callback: render,
+      }
+      const script = document.createElement('script')
+      script.src = 'https://cse.google.com/cse.js?cx=349714df9516f4648'
+      script.async = true
+      document.body.appendChild(script)
+    } else {
+      render()
+    }
+
+    // ✅ ページ遷移時に検索コンテナを非表示＆中身をリセット
+    return () => {
+      if (container) {
+        container.innerHTML = ''
+        container.style.display = 'none'
+      }
+    }
+  }, [])
+
+  return null
+}
+
+export default GoogleCSE

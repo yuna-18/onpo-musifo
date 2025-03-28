@@ -17,34 +17,8 @@
   @inertiaHead
 </head>
 
-<body class="font-notosans antialiased">
+<body>
   @inertia
-  <!-- Google CSE 用の独立したコンテナ -->
-  <div id="google-cse-container" style="display: none;"></div>
+  <div id="google-cse-container"></div>
 </body>
-
-<script>
-  // ✅ 検索窓の表示切り替え関数
-  function toggleGoogleCSEContainer() {
-    const container = document.getElementById("google-cse-container");
-    if (!container) return;
-
-    const hostname = window.location.hostname;
-    const pathname = window.location.pathname.replace(/\/+$/, ''); // 末尾スラッシュ削除
-
-    const isDev = hostname === 'localhost' || hostname === '127.0.0.1';
-    const isTopPage =
-      (isDev && pathname === '') ||              // ローカルは '/'
-      (!isDev && pathname === '/otosukui');      // 本番は '/otosukui'
-
-    container.style.display = isTopPage ? "block" : "none";
-  }
-
-  // ✅ Inertia.js 完了時に切り替え実行
-  document.addEventListener("inertia:finish", toggleGoogleCSEContainer);
-
-  // ✅ 初回ロードで実行
-  toggleGoogleCSEContainer();
-</script>
-
 </html>
