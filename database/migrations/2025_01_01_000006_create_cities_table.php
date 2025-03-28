@@ -22,9 +22,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('sub_area_id');
-        });
         Schema::dropIfExists('cities');
     }
 };
