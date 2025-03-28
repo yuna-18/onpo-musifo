@@ -1,15 +1,10 @@
 import { useEffect } from 'react'
-import { modifySearchLinkOpen } from '@/utils/modifySearchLinkOpen'
+import { switchToConcertTab } from '@/utils/switchToConcertTab'
 
 const GoogleCSE = () => {
   useEffect(() => {
-    const isTopPage = () => {
-      const path = window.location.pathname.replace(/\/$/, '')
-      return path === '' || path === '/otosukui'
-    }
-
     const container = document.getElementById('google-cse-container')
-    if (!container || !isTopPage()) return
+    if (!container) return
 
     container.innerHTML = ''
     container.style.display = 'block'
@@ -22,24 +17,15 @@ const GoogleCSE = () => {
         if (target) {
           clearInterval(interval)
 
-          // 初回表示でも属性追加
-          modifySearchLinkOpen()
+          // ✅ 初期のタブをチェック（検索結果前でも動作する）
+          switchToConcertTab()
 
-          // 検索結果変化を監視
+          // ✅ 検索結果が表示された後にも再チェック
           observer = new MutationObserver(() => {
-            modifySearchLinkOpen()
+            switchToConcertTab()
           })
-          observer.observe(target, { childList: true, subtree: true })
 
-          // role="tab" を持つ要素（カスタムタブ切り替え）にも対応
-          const tabs = document.querySelectorAll('[role="tab"]')
-          tabs.forEach((tab) => {
-            tab.addEventListener('click', () => {
-              setTimeout(() => {
-                modifySearchLinkOpen()
-              }, 300) // 切り替え後に待って実行
-            })
-          })
+          observer.observe(target, { childList: true, subtree: true })
         }
       }, 300)
     }
@@ -73,9 +59,7 @@ const GoogleCSE = () => {
         container.innerHTML = ''
         container.style.display = 'none'
       }
-      if (observer) {
-        observer.disconnect()
-      }
+      if (observer) observer.disconnect()
     }
   }, [])
 
