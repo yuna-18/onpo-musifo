@@ -15,8 +15,8 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
     area_ids: formData.area_ids ?? [],
     subarea_ids: formData.subarea_ids ?? [],
     music_category_ids: formData.music_category_ids ?? [],
-    newsletter_opt_in: formData.newsletter_opt_in ?? 0,
-    email_notify_opt_in: formData.email_notify_opt_in ?? 0,
+    newsletter_opt_in: Number(formData.newsletter_opt_in) ?? 0,
+    email_notify_opt_in: Number(formData.email_notify_opt_in) ?? 0,
     music_inst_category_ids: formData.music_inst_category_ids ?? [],
     music_inst_ids: formData.music_inst_ids ?? [],
   });
@@ -50,7 +50,6 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
     if (formData.area_ids?.length > 0) {
       const selected = initSelectedItems(formData.area_ids, areaOptions);
       setSelectedAreaItems(selected);
-      console.log('✅ AreaItems:', selected);
     }
   
     if (formData.subarea_ids?.length > 0) {
