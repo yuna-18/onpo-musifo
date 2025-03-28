@@ -25,7 +25,6 @@ class RegisterController extends Controller
       'password' => 'required|string|min:8',
       'newsletter_opt_in' => 'nullable|boolean',
       'email_notify_opt_in' => 'nullable|boolean',
-
       'area_ids' => 'nullable|array',
       'area_ids.*' => 'integer|exists:areas,id',
       'subarea_ids' => 'nullable|array',
@@ -110,6 +109,45 @@ class RegisterController extends Controller
       'musicInsts' => $musicInsts,
       'musicCategoryToInstCategoryMap' => $musicCategoryToInstCategoryMap,
       'instCategoryToInstruments' => $instCategoryToInstruments,
+    ]);
+  }
+  
+  public function confirm(Request $request)
+  {
+    $validated = $request->validate([
+      'name' => ['required', 'string', 'max:255', 'regex:/^[^\s　]+$/u'], // スペース禁止
+      'furigana' => ['required', 'string', 'max:255', 'regex:/^[ァ-ヶー]+$/u'], // カタカナのみ（スペースなし）
+      'email' => 'required|email|unique:users,email',
+      'password' => 'required|string|min:8',
+      'newsletter_opt_in' => 'nullable|boolean',
+      'email_notify_opt_in' => 'nullable|boolean',
+      'area_ids' => 'nullable|array',
+      'subarea_ids' => 'nullable|array',
+      'music_category_ids' => 'nullable|array',
+      'music_inst_category_ids' => 'nullable|array',
+      'music_inst_ids' => 'nullable|array',
+    ], [
+      'required' => '必須項目です。',
+      'name.regex' => 'スペースなしで入力してください。',
+      'furigana.regex' => 'カタカナ（スペースなし）で入力してください。',
+      'email' => 'メールアドレスの形式で入力してください。',
+      'email.unique' => 'このメールアドレスは既に登録されています。',
+      'password.min' => 'パスワードは8文字以上で入力してください。',
+    ]);
+    
+    $areaLabels = Area::whereIn('id', $request->input('area_ids', []))->pluck('name')->toArray();
+    $subareaLabels = Subarea::whereIn('id', $request->input('subarea_ids', []))->pluck('name')->toArray();
+    $musicCategoryLabels = MusicCategory::whereIn('id', $request->input('music_category_ids', []))->pluck('name')->toArray();
+    $musicInstCategoryLabels = MusicInstCategory::whereIn('id', $request->input('music_inst_category_ids', []))->pluck('name')->toArray();
+    $musicInstLabels = MusicInst::whereIn('id', $request->input('music_inst_ids', []))->pluck('name')->toArray();
+    
+    return Inertia::render('Auth/RegisterConfirm', [
+      'canRegister' => $validated,
+      'areaLabels' => $areaLabels,
+      'subareaLabels' => $subareaLabels,
+      'musicCategoryLabels' => $musicCategoryLabels,
+      'musicInstCategoryLabels' => $musicInstCategoryLabels,
+      'musicInstLabels' => $musicInstLabels,
     ]);
   }
 }
