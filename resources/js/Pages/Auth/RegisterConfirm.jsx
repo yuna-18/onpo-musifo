@@ -5,7 +5,7 @@ import Header from '@/Components/Header';
 import {Stack, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
 const RegisterConfirm = ({authUser, canRegister, areaLabels, subareaLabels, musicCategoryLabels, musicInstCategoryLabels, musicInstLabels}) => {
-  console.log('props', canRegister);
+  // console.log('props', canRegister);
 
   const submit = (e) => {
     e.preventDefault();
@@ -50,7 +50,7 @@ const RegisterConfirm = ({authUser, canRegister, areaLabels, subareaLabels, musi
           </div>
         </Stack>
         <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
-          <AnchorButton
+          <Button
             onClick={() => Inertia.visit('/register', {
               method: 'get',
               data: canRegister,
@@ -65,7 +65,7 @@ const RegisterConfirm = ({authUser, canRegister, areaLabels, subareaLabels, musi
             className='h-[44px] bg-[var(--color-white)] font-bold text-base/[1] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
           >
             戻る
-          </AnchorButton>
+          </Button>
           <Button
             type='button'
             onClick={submit}

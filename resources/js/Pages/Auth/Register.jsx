@@ -126,17 +126,16 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
   );
   
   const confirm = (e) => {
-    e.preventDefault();
-    console.log("✅ confirm発火");
+    // console.log("✅ confirm発火");
   
     post(route('user.register.confirm'), {
       preserveState: true,
       preserveScroll: true,
       onError: (errors) => {
-        console.log('🚨 バリデーションエラー:', errors);
+        // console.log('🚨 バリデーションエラー:', errors);
       },
       onSuccess: () => {
-        console.log('✅ 確認画面へ遷移');
+        // console.log('✅ 確認画面へ遷移');
       },
     });
   };
