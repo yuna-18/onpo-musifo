@@ -23,6 +23,8 @@ class RegisterController extends Controller
       'furigana' => ['required', 'string', 'max:255', 'regex:/^[ァ-ヶー]+$/u'], // カタカナのみ（スペースなし）
       'email' => 'required|email|unique:users,email',
       'password' => 'required|string|min:8',
+      'newsletter_opt_in' => 'nullable|boolean',
+      'email_notify_opt_in' => 'nullable|boolean',
 
       'area_ids' => 'nullable|array',
       'area_ids.*' => 'integer|exists:areas,id',
@@ -48,6 +50,8 @@ class RegisterController extends Controller
       'furigana' => $validated['furigana'],
       'email' => $validated['email'],
       'password' => Hash::make($validated['password']),
+      'newsletter_opt_in' => $validated['newsletter_opt_in'] ?? 0,
+      'email_notify_opt_in' => $validated['email_notify_opt_in'] ?? 0,
     ]);
 
     $now = now();

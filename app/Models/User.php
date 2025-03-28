@@ -22,6 +22,8 @@ class User extends Authenticatable
     'furigana',
     'email',
     'password',
+    'newsletter_opt_in',
+    'email_notify_opt_in',
   ];
 
   /**

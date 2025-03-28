@@ -14,6 +14,8 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
     area_ids: [],
     subarea_ids: [],
     music_category_ids: [],
+    newsletter_opt_in: 0,
+    email_notify_opt_in: 0,
     music_inst_category_ids: [],
     music_inst_ids: [],
   });
@@ -343,12 +345,12 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             <CheckBox
               id="newsletter_opt_in"
               name="newsletter_opt_in"
-              value={data.newsletter_opt_in}
-              onChange={(e) => setData('newsletter_opt_in', e.target.value)}
-              className=''
+              checked={data.newsletter_opt_in === 1}
+              onChange={(e) => setData('newsletter_opt_in', e.target.checked ? 1 : 0)}
             >
               受け取る
             </CheckBox>
+
           </Fieldset>
           {/* メール通知機能 */}
           <Fieldset
@@ -364,9 +366,8 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
             <CheckBox
               id="email_notify_opt_in"
               name="email_notify_opt_in"
-              value={data.email_notify_opt_in}
-              onChange={(e) => setData('email_notify_opt_in', e.target.value)}
-              className=''
+              checked={data.email_notify_opt_in === 1}
+              onChange={(e) => setData('email_notify_opt_in', e.target.checked ? 1 : 0)}
             >
               利用する
             </CheckBox>
