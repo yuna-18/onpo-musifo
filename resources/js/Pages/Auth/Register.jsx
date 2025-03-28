@@ -152,13 +152,13 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
         {/* optimize エラーが出た時にカーソルを入力欄に合わせる */}
         <form onSubmit={confirm}>
           <Stack className='w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 mx-auto gap-y-2'
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              confirm();
-            }
-          }
-          }
+          // onKeyDown={(e) => {
+          //   if (e.key === 'Enter') {
+          //     e.preventDefault();
+          //     confirm();
+          //   }
+          // }
+          // }
           >
             {/* todo 入力フォーム・フォントのサイズ・間隔設定 */}
             {/* 氏名 */}

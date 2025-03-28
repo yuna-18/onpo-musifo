@@ -51,7 +51,7 @@ const RegisterConfirm = ({authUser, canRegister, areaLabels, subareaLabels, musi
         </Stack>
         <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
           <Button
-            onClick={() => Inertia.visit('/register', {
+            onClick={() => Inertia.visit(route('user.register'), {
               method: 'get',
               data: canRegister,
               preserveState: true,
