@@ -13,7 +13,7 @@ const BookmarkletGuide = ({authUser}) => {
         <h2 className="font-bold text-3xl text-center mb-8">お気に入り登録用ブックマークレット</h2>
         <BookmarkletCodeBlock />
         <div className="mt-12 text-center">
-          <Link href={route('facorite')} className="text-base font-bold underline text-[var(--color-text)] hover:opacity-80">お気に入り一覧に戻る</Link>
+          <Link href={route('favorite')} className="text-base font-bold underline text-[var(--color-text)] hover:opacity-80">お気に入り一覧に戻る</Link>
         </div>
       </main>
     </>

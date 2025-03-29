@@ -1,0 +1,1 @@
+import{r as c}from"./app-BdYWQzMp.js";const o=(i,n)=>c.useMemo(()=>{var u;if(!n)return i;const p={};for(const m in i){const r=i[m];p[m]=((u=n[m])==null?void 0:u.call(n,r))||r}return p},[n,i]);export{o as u};
