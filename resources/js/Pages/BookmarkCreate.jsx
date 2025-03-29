@@ -21,7 +21,7 @@ const BookmarkCreate = ({authUser, initialData}) => {
     notify_at: '',
   });
   // useEffect(() => {
-  //   console.log('authUser', authUser)
+  // console.log('authUser', authUser.email_notify_opt_in)
   // }, [])
 
   // もしクエリパラメータが動的に変化する可能性があれば useEffect で更新できますが、
@@ -97,26 +97,32 @@ const BookmarkCreate = ({authUser, initialData}) => {
                   className='w-[50vw] md:w-[40vw] min-w-[320px] max-w-[600px] h-24 border rounded-md p-2'
                 />
               </FormControl>
-              <Fieldset title="通知" className="">
-                <Input
-                  id="notify_opt_in"
-                  name="notify_opt_in"
-                  type='checkbox'
-                  checked={data.notify_opt_in === 1}
-                  onChange={(e) => setData({...data, notify_opt_in: e.target.checked ? 1 : 0})}
-                  className="p-0"
-                /> あり
-              </Fieldset>
-              <FormControl title="通知日時" htmlFor='notify_at' errorMessages={[]}>
-                <Input
-                  id="notify_at"
-                  name="notify_at"
-                  value={data.notify_at}
-                  type='datetime-local'
-                  onChange={(e) => setData({...data, notify_at: e.target.value})}
-                  className='h-[32px] border rounded-md p-2'
-                />
-              </FormControl>
+              {authUser.email_notify_opt_in === 1 ? (
+                <>
+                  <Fieldset title="通知" className="">
+                    <Input
+                      id="notify_opt_in"
+                      name="notify_opt_in"
+                      type='checkbox'
+                      checked={data.notify_opt_in === 1}
+                      onChange={(e) => setData({...data, notify_opt_in: e.target.checked ? 1 : 0})}
+                      className="p-0"
+                    /> あり
+                  </Fieldset>
+                  {data.notify_opt_in === 1 ? (
+                    <FormControl title="通知日時" htmlFor='notify_at' errorMessages={[]}>
+                      <Input
+                        id="notify_at"
+                        name="notify_at"
+                        value={data.notify_at}
+                        type='datetime-local'
+                        onChange={(e) => setData({...data, notify_at: e.target.value})}
+                        className='h-[32px] border rounded-md p-2'
+                      />
+                    </FormControl>
+                  ) : null}
+                </>
+              ) : null}
             </Stack>
             <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
               <Button
