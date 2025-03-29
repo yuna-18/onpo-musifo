@@ -23,7 +23,7 @@ const Bookmark = ({authUser, bookmarks}) => {
           {bookmarks.map((bookmark) => (
             <li key={bookmark.id} className='flex items-center justify-between'>
               <div className='flex flex-col gap-y-2 font-bold leading-[1.7]'>
-                <a href={bookmark.url} className='text-xl leading-[1.6] underline'>{bookmark.title ?? 'お気に入り'}</a>
+                <a href={bookmark.url} target="_blank" rel='noopener norefer' className='text-xl leading-[1.6] underline'>{bookmark.title ?? 'お気に入り'}</a>
                 <p>{bookmark.comment ?? 'ー'}</p>
                 <p>{bookmark.notify_at ?? 'ー'}</p>
               </div>
