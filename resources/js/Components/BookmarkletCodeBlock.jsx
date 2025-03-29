@@ -6,15 +6,15 @@ const BookmarkletCodeBlock = () => {
   const [copied, setCopied] = useState(false);
 
   const homePath = import.meta.env.VITE_HOME_PATH || '/';
-  const popupBaseUrl =
-    homePath === '/'
-      ? 'http://localhost/favorite/create'
-      : `https://your-production-domain.com${homePath}/favorite/create`;
+  // const popupBaseUrl =
+  //   homePath === '/'
+  //     ? 'http://localhost/favorite/create'
+  //     : `https://your-production-domain.com${homePath}/favorite/create`;
 
   const bookmarkletCode = `javascript:(function(){
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(document.title);
-    const popupUrl = "${popupBaseUrl}?title=" + title + "&url=" + url;
+    const popupUrl = "https://snowtapir22.sakura.ne.jp/otosukui/favorite/create?title=" + title + "&url=" + url;
     window.open(popupUrl, "BookmarkWindow", "width=600,height=500");
   })();`;
 
@@ -46,7 +46,7 @@ const BookmarkletCodeBlock = () => {
       <Button
         onClick={handleCopy}
         variant="primary"
-        className="h-[44px]"
+        className='h-[44px] bg-[var(--color-primary)] font-bold text-base/[1] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
       >
         {copied ? 'コピーしました！' : 'コードをコピー'}
       </Button>
