@@ -20,25 +20,25 @@ const BookmarkCreate = ({authUser, initialData}) => {
     notify_opt_in: 0,
     notify_at: '',
   });
-  // useEffect(() => {
-  // console.log('authUser', authUser.email_notify_opt_in)
-  // }, [])
 
-  // もしクエリパラメータが動的に変化する可能性があれば useEffect で更新できますが、
-  // 通常は初回取得で十分です。
+  const getCsrfTokenFromCookie = () => {
+    const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+  };
+  
+  const token = getCsrfTokenFromCookie();
 
   const submit = async (e) => {
     e.preventDefault();
-    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     try {
       const response = await fetch(route('favorite.store'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': token,
+          'X-CSRF-TOKEN': token,  // ここにCookieから取った値を明示
         },
-        credentials: 'include',
-        body: JSON.stringify(data)
+        credentials: 'include',  // Cookie送信が必要なので必須
+        body: JSON.stringify(data),
       });
       if (response.ok) {
         alert('お気に入り一覧に追加されました');
