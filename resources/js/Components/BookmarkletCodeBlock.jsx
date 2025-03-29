@@ -8,11 +8,14 @@ const BookmarkletCodeBlock = () => {
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(document.title);
     let popupUrl;
-    if ("/" === "/") {
+    const homePath = "${import.meta.env.VITE_HOME_PATH || '/'}";
+  
+    if (homePath === '/') {
       popupUrl = "http://localhost/favorite/create?title=" + title + "&url=" + url;
     } else {
-      popupUrl = "https://snowtapir22.sakura.ne.jp/otosukui/favorite/create?title=" + title + "&url=" + url;
+      popupUrl = "https://snowtapir22.sakura.ne.jp" + homePath + "/favorite/create?title=" + title + "&url=" + url;
     }
+  
     window.open(popupUrl, "BookmarkWindow", "width=600,height=500");
   })();`;
 
