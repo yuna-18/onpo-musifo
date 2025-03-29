@@ -4,11 +4,11 @@ import Header from '@/Components/Header';
 import * as Images from '../img';
 import {Button, AnchorButton} from 'smarthr-ui';
 
-const Favorite = ({authUser}) => {
+const Bookmark = ({authUser}) => {
 
   return (
     <>
-      <Head title="音報 | お気に入り" />
+      <Head title="音すくい | お気に入り" />
       <Header authUser={authUser} />
       <main className="pt-[132px] px-4 md:px-8 text-[var(--color-text-primary)]">
         <h2 className='font-bold text-3xl text-center'>お気に入り一覧</h2>
@@ -64,8 +64,19 @@ const Favorite = ({authUser}) => {
           </li>
         </ul>
       </main>
+      <a href="javascript:(function(){
+          var url = encodeURIComponent(window.location.href);
+          var title = encodeURIComponent(document.title);
+          var popupUrl = 'http://localhost/favorite/create?title=' + title + '&url=' + url;
+          window.open(popupUrl, 'BookmarkWindow', 'width=600,height=500');
+        })();">
+        音すくいお気に入り機能
+      </a>
     </>
   );
 };
 
-export default Favorite;
+export default Bookmark;
+// var popupUrl = 'https://snowtapir22.sakura.ne.jp/otosukui/favorite/create?title=' + title + '&url=' + url;
+
+// javascript:gSqRN3jG='';if(document.getSelection())%7BgSqRN3jG=document.getSelection()%7D;if(gSqRN3jG=='')%7Bvoid(gSqRN3jG=prompt('このページのタイトル',''))%7D;if(gSqRN3jG!=null)%7Bwith(document)%7Bwrite(gSqRN3jG.link(location.href));close()%7D%7Delse%7Bvoid(null)%7D

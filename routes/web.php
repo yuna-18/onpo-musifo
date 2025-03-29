@@ -30,7 +30,8 @@ Route::middleware('auth')->group(function () {
   // 削除
   Route::delete('/favorite/{bookmark}', [BookmarkController::class, 'destroy'])->name('favorite.destroy');
   // 外部登録フォームがあるなら
-  Route::post('/favorite', [BookmarkController::class, 'store'])->name('favorite.store');
+  Route::get('/favorite/create', [BookmarkController::class, 'create'])->name('favorite.create');
+  Route::post('/favorite/store', [BookmarkController::class, 'store'])->name('favorite.store');
 });
 
 Route::get('/smarthr-test', function () {
