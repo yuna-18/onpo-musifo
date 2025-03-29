@@ -9,7 +9,9 @@ class Bookmark extends Model
   // ⭐️ここから下追加する
   // 追加：↓1行
   protected $fillable = [
+    'user_id',
     'url',
+    'title',
     'comment',
     'notify_opt_in',
     'notify_at'

@@ -5,7 +5,7 @@ import {createTheme, ThemeProvider, FormControl, Fieldset, Stack, Input, Button,
 // Inertiaのヘッダーなど必要ならインポートする
 // import { Head } from '@inertiajs/react'; // 例
 
-const BookmarkCreate = () => {
+const BookmarkCreate = ({authUser, initialData}) => {
   const theme = createTheme();
 
   // URLのクエリパラメータは window.location.search から取得
@@ -20,27 +20,38 @@ const BookmarkCreate = () => {
     notify_opt_in: 0,
     notify_at: '',
   });
+  // useEffect(() => {
+  //   console.log('authUser', authUser)
+  // }, [])
 
   // もしクエリパラメータが動的に変化する可能性があれば useEffect で更新できますが、
   // 通常は初回取得で十分です。
 
   const submit = async (e) => {
     e.preventDefault();
+    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     try {
-      const response = await fetch('/api/bookmarks', {
+      const response = await fetch('/favorite/store', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': token,
+        },
+        credentials: 'include',
         body: JSON.stringify(data)
       });
       if (response.ok) {
         alert('お気に入り一覧に追加されました');
-        // 必要に応じてリダイレクト処理を行う
+        // 成功時にポップアップを閉じる
+        window.close();
       } else {
-        console.log(response)
-        alert('登録に失敗しました');
+        const text = await response.text();
+        console.error('エラー内容:', text);
+        // console.log(data);
+        alert('登録に失敗しました: ' + text);
       }
     } catch (error) {
-      console.error(error);
+      console.error('通信エラー:', error);
       alert('登録中にエラーが発生しました');
     }
   };
@@ -109,12 +120,7 @@ const BookmarkCreate = () => {
             </Stack>
             <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
               <Button
-                onClick={() => Inertia.visit(route('user.register'), {
-                  method: 'get',
-                  data: canRegister,
-                  preserveState: true,
-                  preserveScroll: true,
-                })}
+                // onClick={window.close()}
                 prefix=""
                 size="default"
                 suffix=""
@@ -122,7 +128,7 @@ const BookmarkCreate = () => {
                 wide
                 className='h-[44px] bg-[var(--color-white)] font-bold text-base/[1] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
               >
-                戻る
+                キャンセル
               </Button>
               <Button
                 type='button'

@@ -2,6 +2,7 @@ import React from 'react';
 import {Head} from '@inertiajs/react';
 import Header from '@/Components/Header';
 import * as Images from '../img';
+import BookmarkletLink from '@/Components/BookmarkletLink'
 import {Button, AnchorButton} from 'smarthr-ui';
 
 const Bookmark = ({authUser}) => {
@@ -64,19 +65,9 @@ const Bookmark = ({authUser}) => {
           </li>
         </ul>
       </main>
-      <a href="javascript:(function(){
-          var url = encodeURIComponent(window.location.href);
-          var title = encodeURIComponent(document.title);
-          var popupUrl = 'http://localhost/favorite/create?title=' + title + '&url=' + url;
-          window.open(popupUrl, 'BookmarkWindow', 'width=600,height=500');
-        })();">
-        音すくいお気に入り機能
-      </a>
+      <BookmarkletLink/>
     </>
   );
 };
 
 export default Bookmark;
-// var popupUrl = 'https://snowtapir22.sakura.ne.jp/otosukui/favorite/create?title=' + title + '&url=' + url;
-
-// javascript:gSqRN3jG='';if(document.getSelection())%7BgSqRN3jG=document.getSelection()%7D;if(gSqRN3jG=='')%7Bvoid(gSqRN3jG=prompt('このページのタイトル',''))%7D;if(gSqRN3jG!=null)%7Bwith(document)%7Bwrite(gSqRN3jG.link(location.href));close()%7D%7Delse%7Bvoid(null)%7D

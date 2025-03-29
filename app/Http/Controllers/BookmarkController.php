@@ -6,6 +6,7 @@ use App\Models\Bookmark;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class BookmarkController extends Controller
 {
@@ -34,50 +35,57 @@ class BookmarkController extends Controller
     ];
     // Inertia を使っている場合、初期データをpropsに渡す
     return Inertia::render('BookmarkCreate', [
-        'initialData' => $initialData,
-    ]);
+      'initialData' => $initialData,
+      'authUser' => Auth::user(), // ← 追加
+  ]);
 }
 
   /**
    * Store a newly created resource in storage.
    */
   public function store(Request $request)
-  {
+{
     $now = now();
+    $convertedNotifyAt = null;
 
     $validated = $request->validate([
-      'url' => 'required|url',
-      'title' => 'nullable|max:30',
-      'comment' => 'nullable',
-      'notify_opt_in' => 'nullable|in:0,1',
-      'notify_at' => [
-        'nullable',
-        'date',
-        // カスタムルール: 現在時刻の1時間後より未来でなければならない
-        function ($attribute, $value, $fail) use ($now) {
-          // $now->copy()で現在時刻のクローンを作成
-          if (strtotime($value) < strtotime($now->copy()->addHour())) {
-            $fail($attribute . 'は現在時刻より1時間以上先でなければなりません。');
-          }
-        }
-      ],
+        'url' => 'required|url',
+        'title' => 'nullable|max:30',
+        'comment' => 'nullable',
+        'notify_opt_in' => 'nullable|in:0,1',
+        'notify_at' => [
+            'nullable',
+            function ($attribute, $value, $fail) use (&$convertedNotifyAt, $now) {
+                if ($value) {
+                    try {
+                        // フロントからの "YYYY-MM-DDTHH:MM" を "YYYY-MM-DD HH:MM:00" に変換
+                        $converted = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $value);
+                        if ($converted->lt($now->copy()->addHour())) {
+                            $fail('通知日時は現在時刻より1時間以上先でなければなりません。');
+                        }
+                        $convertedNotifyAt = $converted->format('Y-m-d H:i:s');
+                    } catch (\Exception $e) {
+                        $fail('通知日時の形式が正しくありません。');
+                    }
+                }
+            }
+        ],
     ], [
-      'url.required' => 'URLは必ず入力してください。',
-      'title.max' => '30文字未満で入力してください。',
+        'url.required' => 'URLは必ず入力してください。',
+        'title.max' => '30文字未満で入力してください。',
     ]);
 
-    // データ作成
     $bookmark = Bookmark::create([
-      'url' => $validated['url'],
-      'title' => $validated['title'] ?? null,
-      'comment' => $validated['comment'] ?? null,
-      'notify_opt_in' => (int) $request->input('notify_opt_in', 0),
-      'notify_at' => $validated['notify_at'] ?? null,
+        'user_id'       => Auth::id(),
+        'url'           => $validated['url'],
+        'title'         => $validated['title'] ?? null,
+        'comment'       => $validated['comment'] ?? null,
+        'notify_opt_in' => (int) $request->input('notify_opt_in', 0),
+        'notify_at'     => $convertedNotifyAt,
     ]);
 
-    // 登録完了後は一覧ページへリダイレクトする例
-    return redirect()->route('favorite')->with('success', 'ブックマークが登録されました。');
-  }
+    return response()->json(['message' => 'ブックマークが登録されました。']);
+}
 
   /**
    * Display the specified resource.
