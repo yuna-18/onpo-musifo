@@ -120,7 +120,7 @@ const BookmarkCreate = ({authUser, initialData}) => {
             </Stack>
             <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
               <Button
-                // onClick={window.close()}
+                onClick={() => window.close()}
                 prefix=""
                 size="default"
                 suffix=""
