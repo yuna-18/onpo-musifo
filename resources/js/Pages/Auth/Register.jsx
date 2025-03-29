@@ -7,7 +7,7 @@ import {Input, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
 export default function Register ({authUser, areas, subareas, areaToSubarea, musicCategories, musicInstCategories, musicInsts, musicCategoryToInstCategoryMap, instCategoryToInstruments, formData = {}}) {
   const theme = createTheme();
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const {data, setData, post, processing, errors, reset} = useForm({
     name: formData.name ?? '',
     furigana: formData.furigana ?? '',
     email: formData.email ?? '',
@@ -40,33 +40,33 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
   const [selectedSubareaItems, setSelectedSubareaItems] = useState([]);
   // 音楽カテゴリ状態保持
   const [selectedMusicCategories, setSelectedMusicCategories] = useState([]);
-  
+
   useEffect(() => {
     const initSelectedItems = (ids = [], options = []) => {
       const normalizedIds = ids.map((id) => Number(id));
       return options.filter((opt) => normalizedIds.includes(Number(opt.value)));
     };
-  
+
     if (formData.area_ids?.length > 0) {
       const selected = initSelectedItems(formData.area_ids, areaOptions);
       setSelectedAreaItems(selected);
     }
-  
+
     if (formData.subarea_ids?.length > 0) {
       const selected = initSelectedItems(formData.subarea_ids, subareaOptions);
       setSelectedSubareaItems(selected);
     }
-  
+
     if (formData.music_category_ids?.length > 0) {
       const selected = initSelectedItems(formData.music_category_ids, musicCategoryOptions);
       setSelectedMusicCategories(selected);
     }
-  
+
     if (formData.music_inst_category_ids?.length > 0) {
       const selected = initSelectedItems(formData.music_inst_category_ids, musicInstCategoryOptions);
       setSelectedMusicInstCategoryItems(selected);
     }
-  
+
     if (formData.music_inst_ids?.length > 0) {
       const selected = initSelectedItems(formData.music_inst_ids, musicInstOptions);
       setSelectedMusicInstItems(selected);
@@ -124,10 +124,10 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
     instCategoryToInstruments,
     musicInstOptions
   );
-  
+
   const confirm = (e) => {
     // console.log("✅ confirm発火");
-  
+
     post(route('user.register.confirm'), {
       preserveState: true,
       preserveScroll: true,
@@ -147,7 +147,7 @@ export default function Register ({authUser, areas, subareas, areaToSubarea, mus
     <ThemeProvider theme={theme}>
       <Head title="音すくい | 新規登録" />
       <Header authUser={authUser} />
-      <main className='pt-[132px] text-[var(--color-text-primary)]  bg-[var(--color-background)] select-none'>
+      <main className='pt-[148px] text-[var(--color-text-primary)]  bg-[var(--color-background)] select-none'>
         <h2 className='font-bold text-3xl text-center'>ユーザー登録</h2>
         {/* optimize エラーが出た時にカーソルを入力欄に合わせる */}
         <form onSubmit={confirm}>

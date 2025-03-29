@@ -79,7 +79,6 @@ export default function Login ({status, canResetPassword}) {
               name="password"
               value={data.password}
               autoComplete="password"
-              autoFocus
               type='password'
               required
               onChange={(e) => setData('password', e.target.value)}

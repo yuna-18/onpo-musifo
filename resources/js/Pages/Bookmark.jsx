@@ -1,8 +1,7 @@
 import React from 'react';
-import {Head} from '@inertiajs/react';
+import {Head, Link} from '@inertiajs/react';
 import Header from '@/Components/Header';
 import * as Images from '../img';
-import BookmarkletLink from '@/Components/BookmarkletLink'
 import {Button, AnchorButton} from 'smarthr-ui';
 
 const Bookmark = ({authUser}) => {
@@ -11,12 +10,18 @@ const Bookmark = ({authUser}) => {
     <>
       <Head title="音すくい | お気に入り" />
       <Header authUser={authUser} />
-      <main className="pt-[132px] px-4 md:px-8 text-[var(--color-text-primary)]">
+      <main className="pt-[148px] px-4 md:px-8 text-[var(--color-text-primary)]">
         <h2 className='font-bold text-3xl text-center'>お気に入り一覧</h2>
-        <ul className='pt-8'>
+        <Link
+          href={route('favorite.howtosave')}
+          className="font-normal text-base/[1.7] hover:opacity-90 underline block ml-auto w-fit"
+        >
+          ❓お気に入り一覧への追加方法
+        </Link>
+        <ul className='pt-12'>
           <li className='flex items-center justify-between'>
             <div className='flex flex-col gap-y-2 font-bold leading-[1.7]'>
-              <a href="" className='text-lg leading-[1.6] underline'>サイトタイトル</a>
+              <a href="" className='text-xl leading-[1.6] underline'>サイトタイトル</a>
               <p>メモ</p>
               <p>通知日時</p>
             </div>
@@ -50,22 +55,10 @@ const Bookmark = ({authUser}) => {
                   編集
                 </span>
               </AnchorButton>
-              {/* <Button
-            prefix=""
-            size="default"
-            suffix=""
-            type='submit'
-            variant="primary"
-            className=''
-            wide
-          >
-            確認
-          </Button> */}
             </div>
           </li>
         </ul>
       </main>
-      <BookmarkletLink/>
     </>
   );
 };

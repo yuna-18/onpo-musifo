@@ -11,7 +11,7 @@ const Top = ({authUser, canLogin, canRegister}) => {
     <div className='bg-[var(--color-background)]'>
       <Head title="音すくい | トップページ" />
       <Header authUser={authUser} />
-      <main className="pt-[132px] px-4 md:px-8 text-[var(--color-text-primary)]">
+      <main className="pt-[148px] px-4 md:px-8 text-[var(--color-text-primary)]">
         {flash?.message && (
           <div className="bg-green-100 text-green-800 p-4 rounded mb-4">
             {flash.message}
