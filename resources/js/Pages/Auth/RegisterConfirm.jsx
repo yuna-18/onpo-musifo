@@ -1,6 +1,6 @@
 import React from 'react';
 import {Head} from '@inertiajs/react';
-import { Inertia } from '@inertiajs/inertia';
+import {Inertia} from '@inertiajs/inertia';
 import Header from '@/Components/Header';
 import {Stack, MultiComboBox, CheckBox, Button, AnchorButton} from 'smarthr-ui';
 
@@ -16,7 +16,7 @@ const RegisterConfirm = ({authUser, canRegister, areaLabels, subareaLabels, musi
     <div className='bg-[var(--color-background)]'>
       <Head title="音すくい | 登録内容確認" />
       <Header authUser={authUser} />
-      <main className="bg-[var(--color-background)] h-[100vh] pt-[132px] px-4 md:px-8 text-[var(--color-text-primary)]">
+      <main className="bg-[var(--color-background)] h-[100vh] pt-[148px] px-4 md:px-8 text-[var(--color-text-primary)]">
         <h2 className='font-bold text-3xl text-center'>登録内容確認</h2>
         <Stack className="bg-[var(--color-white)] border-[1px] border-[var(--color-border)] rounded-lg w-[90vw] md:w-[80vw] lg:w-[60vw] mt-8 mx-auto p-8"
           onKeyDown={(e) => {

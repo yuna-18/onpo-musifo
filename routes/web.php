@@ -32,6 +32,13 @@ Route::middleware('auth')->group(function () {
   // 外部登録フォームがあるなら
   Route::get('/favorite/create', [BookmarkController::class, 'create'])->name('favorite.create');
   Route::post('/favorite/store', [BookmarkController::class, 'store'])->name('favorite.store');
+
+
+  Route::get('/favorite/how-to-save', function () {
+    return Inertia::render('BookmarkletGuide', [
+      'authUser' => optional(Auth::user())->toArray(),
+    ]);
+  })->name('favorite.howtosave');
 });
 
 Route::get('/smarthr-test', function () {
