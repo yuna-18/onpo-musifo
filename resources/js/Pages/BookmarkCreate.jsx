@@ -31,7 +31,7 @@ const BookmarkCreate = ({authUser, initialData}) => {
     e.preventDefault();
     const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     try {
-      const response = await fetch('/favorite/store', {
+      const response = await fetch(route('favorite.store'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,53 +106,53 @@ const BookmarkCreate = ({authUser, initialData}) => {
                       checked={data.notify_opt_in === 1}
                       onChange={(e) => setData({...data, notify_opt_in: e.target.checked ? 1 : 0})}
                     >
-                    あり
-                  </CheckBox>
-                </Fieldset>
-              {data.notify_opt_in === 1 ? (
-                <FormControl title="通知日時" htmlFor='notify_at' errorMessages={[]}>
-                  <Input
-                    id="notify_at"
-                    name="notify_at"
-                    value={data.notify_at}
-                    type='datetime-local'
-                    onChange={(e) => setData({...data, notify_at: e.target.value})}
-                    className='h-[32px] border rounded-md p-2'
-                  />
-                </FormControl>
+                      あり
+                    </CheckBox>
+                  </Fieldset>
+                  {data.notify_opt_in === 1 ? (
+                    <FormControl title="通知日時" htmlFor='notify_at' errorMessages={[]}>
+                      <Input
+                        id="notify_at"
+                        name="notify_at"
+                        value={data.notify_at}
+                        type='datetime-local'
+                        onChange={(e) => setData({...data, notify_at: e.target.value})}
+                        className='h-[32px] border rounded-md p-2'
+                      />
+                    </FormControl>
+                  ) : null}
+                </>
               ) : null}
-            </>
-              ) : null}
-          </Stack>
-          <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
-            <Button
-              onClick={() => window.close()}
-              prefix=""
-              size="default"
-              suffix=""
-              variant="secondary"
-              wide
-              className='h-[44px] bg-[var(--color-white)] font-bold text-base/[1] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
-            >
-              キャンセル
-            </Button>
-            <Button
-              type='button'
-              onClick={submit}
-              prefix=""
-              size="default"
-              suffix=""
-              variant="primary"
-              wide
-              // disabled={processing}
-              className='h-[44px] bg-[var(--color-primary)] font-bold text-base/[1] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
-            >
-              登録
-            </Button>
-          </div>
-        </form>
-      </main>
-    </Center>
+            </Stack>
+            <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
+              <Button
+                onClick={() => window.close()}
+                prefix=""
+                size="default"
+                suffix=""
+                variant="secondary"
+                wide
+                className='h-[44px] bg-[var(--color-white)] font-bold text-base/[1] border-[var(--color-text-primary)] hover:bg-[var(--color-primary-bg-hover)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]'
+              >
+                キャンセル
+              </Button>
+              <Button
+                type='button'
+                onClick={submit}
+                prefix=""
+                size="default"
+                suffix=""
+                variant="primary"
+                wide
+                // disabled={processing}
+                className='h-[44px] bg-[var(--color-primary)] font-bold text-base/[1] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
+              >
+                登録
+              </Button>
+            </div>
+          </form>
+        </main>
+      </Center>
     </ThemeProvider >
   );
 };
