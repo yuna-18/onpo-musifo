@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('bookmarks', function (Blueprint $table) {
             $table->id();                                // id
             $table->string('url', 2083);                 // url
+            $table->string('title', 30)->nullable();                 // url
             $table->string('comment', 1000)->nullable(); // comment
             $table->boolean('notify_opt_in')->default(false);
             $table->timestamp('notify_at')->nullable();

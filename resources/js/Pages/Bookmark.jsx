@@ -2,13 +2,14 @@ import React from 'react';
 import {Head} from '@inertiajs/react';
 import Header from '@/Components/Header';
 import * as Images from '../img';
+import BookmarkletLink from '@/Components/BookmarkletLink'
 import {Button, AnchorButton} from 'smarthr-ui';
 
-const Favorite = ({authUser}) => {
+const Bookmark = ({authUser}) => {
 
   return (
     <>
-      <Head title="音報 | お気に入り" />
+      <Head title="音すくい | お気に入り" />
       <Header authUser={authUser} />
       <main className="pt-[132px] px-4 md:px-8 text-[var(--color-text-primary)]">
         <h2 className='font-bold text-3xl text-center'>お気に入り一覧</h2>
@@ -64,8 +65,9 @@ const Favorite = ({authUser}) => {
           </li>
         </ul>
       </main>
+      <BookmarkletLink/>
     </>
   );
 };
 
-export default Favorite;
+export default Bookmark;
