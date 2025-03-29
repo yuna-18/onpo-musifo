@@ -1,67 +1,32 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
+import { useForm, Head } from "@inertiajs/react";
+import { createTheme, ThemeProvider, FormControl, Fieldset, Stack, Input, Button, Center, CheckBox } from 'smarthr-ui';
 
-import {createTheme, ThemeProvider, FormControl, Fieldset, Stack, Input, Button, Center, CheckBox} from 'smarthr-ui';
-
-const BookmarkEdit = ({authUser, formData}) => {
+const BookmarkEdit = ({ authUser, bookmark }) => {
   const theme = createTheme();
 
-  // URLのクエリパラメータは window.location.search から取得
-  const query = new URLSearchParams(window.location.search);
-  const initialTitle = query.get('title') || 'お気に入り';
-  const initialUrl = query.get('url') || '';
-
-  const [data, setData] = useState({
-    url: initialUrl,
-    title: initialTitle,
-    comment: '',
-    notify_opt_in: 0,
-    notify_at: '',
+  const { data, setData, patch, processing, errors } = useForm({
+    url: bookmark.url || '',
+    title: bookmark.title || '',
+    comment: bookmark.comment || '',
+    notify_opt_in: bookmark.notify_opt_in || 0,
+    notify_at: bookmark.notify_at ? bookmark.notify_at.replace(' ', 'T') : '',
   });
-  // useEffect(() => {
-  // console.log('authUser', authUser.email_notify_opt_in)
-  // }, [])
 
-  // もしクエリパラメータが動的に変化する可能性があれば useEffect で更新できますが、
-  // 通常は初回取得で十分です。
-
-  const submit = async (e) => {
+  const submit = (e) => {
     e.preventDefault();
-    const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    try {
-      const response = await fetch(route('favorite.store'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': token,
-        },
-        credentials: 'include',
-        body: JSON.stringify(data)
-      });
-      if (response.ok) {
-        alert('お気に入り一覧に追加されました');
-        // 成功時にポップアップを閉じる
-        window.close();
-      } else {
-        const text = await response.text();
-        console.error('エラー内容:', text);
-        // console.log(data);
-        alert('登録に失敗しました: ' + text);
-      }
-    } catch (error) {
-      console.error('通信エラー:', error);
-      alert('登録中にエラーが発生しました');
-    }
+    patch(route('favorite.update', bookmark.id));
   };
 
   return (
     <ThemeProvider theme={theme}>
-      {/* InertiaのHead等、必要ならここに追加 */}
+      <Head title="お気に入り編集" />
       <Center className=" bg-[var(--color-background)] h-screen overflow-y-auto">
         <main className='text-[var(--color-text-primary)] select-none'>
-          <h2 className='font-bold text-3xl text-center mt-16'>ブックマーク登録</h2>
+          <h2 className='font-bold text-3xl text-center mt-16'>ブックマーク編集</h2>
           <form onSubmit={submit}>
             <Stack className='w-fit mt-8 gap-y-2'>
-              <FormControl title="URL(リンク)" htmlFor='url' errorMessages={[]}>
+              <FormControl title="URL(リンク)" htmlFor='url' errorMessages={errors.url ? [errors.url] : []}>
                 <Input
                   id="url"
                   name="url"
@@ -70,17 +35,17 @@ const BookmarkEdit = ({authUser, formData}) => {
                   autoFocus
                   type='text'
                   required
-                  onChange={(e) => setData({...data, url: e.target.value})}
+                  onChange={(e) => setData('url', e.target.value)}
                   className='w-[50vw] md:w-[40vw] min-w-[320px] max-w-[600px] h-[32px] border rounded-md p-2'
                 />
               </FormControl>
-              <FormControl title="タイトル" htmlFor='title'>
+              <FormControl title="タイトル" htmlFor='title' errorMessages={errors.title ? [errors.title] : []}>
                 <Input
                   id="title"
                   name="title"
                   value={data.title}
                   type='text'
-                  onChange={(e) => setData({...data, title: e.target.value})}
+                  onChange={(e) => setData('title', e.target.value)}
                   className='w-[50vw] md:w-[40vw] min-w-[320px] max-w-[600px] h-[32px] border rounded-md p-2'
                 />
               </FormControl>
@@ -90,40 +55,40 @@ const BookmarkEdit = ({authUser, formData}) => {
                   name="comment"
                   value={data.comment}
                   type='text'
-                  onChange={(e) => setData({...data, comment: e.target.value})}
+                  onChange={(e) => setData('comment', e.target.value)}
                   className='w-[50vw] md:w-[40vw] min-w-[320px] max-w-[600px] h-24 border rounded-md p-2'
                 />
               </FormControl>
-              {authUser.email_notify_opt_in === 1 ? (
+              {authUser.email_notify_opt_in === 1 && (
                 <>
-                  <Fieldset title="通知" className="">
+                  <Fieldset title="通知">
                     <CheckBox
                       id="notify_opt_in"
                       name="notify_opt_in"
                       checked={data.notify_opt_in === 1}
-                      onChange={(e) => setData({...data, notify_opt_in: e.target.checked ? 1 : 0})}
+                      onChange={(e) => setData('notify_opt_in', e.target.checked ? 1 : 0)}
                     >
                       あり
                     </CheckBox>
                   </Fieldset>
-                  {data.notify_opt_in === 1 ? (
-                    <FormControl title="通知日時" htmlFor='notify_at' errorMessages={[]}>
+                  {data.notify_opt_in === 1 && (
+                    <FormControl title="通知日時" htmlFor='notify_at' errorMessages={errors.notify_at ? [errors.notify_at] : []}>
                       <Input
                         id="notify_at"
                         name="notify_at"
                         value={data.notify_at}
                         type='datetime-local'
-                        onChange={(e) => setData({...data, notify_at: e.target.value})}
+                        onChange={(e) => setData('notify_at', e.target.value)}
                         className='h-[32px] border rounded-md p-2'
                       />
                     </FormControl>
-                  ) : null}
+                  )}
                 </>
-              ) : null}
+              )}
             </Stack>
             <div className='flex flex-col mx-auto mt-16 md:flex-row w-[160px] md:w-[368px] gap-y-6 md:gap-x-12 pb-16'>
               <Button
-                onClick={() => window.close()}
+                onClick={() => history.back()}
                 prefix=""
                 size="default"
                 suffix=""
@@ -134,23 +99,22 @@ const BookmarkEdit = ({authUser, formData}) => {
                 キャンセル
               </Button>
               <Button
-                type='button'
-                onClick={submit}
+                type='submit'
                 prefix=""
                 size="default"
                 suffix=""
                 variant="primary"
                 wide
-                // disabled={processing}
+                disabled={processing}
                 className='h-[44px] bg-[var(--color-primary)] font-bold text-base/[1] border-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)]'
               >
-                登録
+                変更
               </Button>
             </div>
           </form>
         </main>
       </Center>
-    </ThemeProvider >
+    </ThemeProvider>
   );
 };
 
